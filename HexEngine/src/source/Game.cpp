@@ -2,19 +2,17 @@
 
 using namespace std;
 
-Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mPlayer(), mTexture(){
+Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mPlayer(){
 
 	
+	textures.load(Textures::Airplane, "Resources/img/plane.png");
 	
-	if (!mTexture.loadFromFile("Resources/img/plane.png"))
-	{
-		printf("ERROR");// Handle loading error
-	}
+	mPlayer.setTexture(textures.get(Textures::Airplane));
 
-	mPlayer.setTexture(mTexture);
+	auto size = textures.get(Textures::Airplane).getSize();
 	mPlayer.setPosition(100.f, 100.f);
 
-	mPlayer.setOrigin(mTexture.getSize().x/2.f, mTexture.getSize().y/2.f);
+	mPlayer.setOrigin(size.x / 2.f, size.y / 2.f);
 
 	mWindow.clear();
 	mWindow.draw(mPlayer);

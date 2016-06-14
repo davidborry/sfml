@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "SFML\Graphics.hpp"
+#include "util\ResourceHolder.h"
 
 
 class Game{
@@ -19,12 +20,13 @@ private:
 	void movePlayer(sf::Time deltaTime);
 
 	sf::RenderWindow mWindow;
-	sf::Texture mTexture;
 	sf::Sprite mPlayer;
 
 	float playerSpeed = 100.f;
 	bool isAccelerating=false, isSlowingDown=false, isRotatingLeft = false, isRotatingRight=false;
 	const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
+
+	ResourceHolder textures;
 
 };
 
