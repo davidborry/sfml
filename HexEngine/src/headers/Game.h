@@ -22,11 +22,14 @@ private:
 	sf::RenderWindow mWindow;
 	sf::Sprite mPlayer;
 
+	sf::Text mText;
+
 	float playerSpeed = 100.f;
 	bool isAccelerating=false, isSlowingDown=false, isRotatingLeft = false, isRotatingRight=false;
 	const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
 
 	ResourceHolder<sf::Texture, Textures::ID> textures;
+	ResourceHolder<sf::Font, Fonts::ID> fonts;
 
 };
 

@@ -10,14 +10,19 @@ namespace Textures{
 	enum ID{Landscape, Airplane, Missile};
 }
 
+namespace Fonts{
+	enum ID{Pacifico};
+}
+
 template < typename Resource, typename Identifier >
 class ResourceHolder{
 
 public:
-	void ResourceHolder<Resource, Identifier>::load(Identifier id, const std::string& filename){
+
+	void load(Identifier id, const std::string& filename){
 
 		unique_ptr<Resource> resource(new Resource());
-		printf("dsfsdf");
+		//printf("default");
 		if (!resource->loadFromFile(filename))
 			throw std::runtime_error("TextureHolder::load - failed to load " + filename);
 
@@ -25,7 +30,18 @@ public:
 		assert(inserted.second);
 	}
 
-	const Resource& ResourceHolder<Resource, Identifier>::get(Identifier id) const{
+	template <typename Parameter>
+	void load(Identifier id, const std::string& filename,const Parameter& secondParam){
+		unique_ptr<Resource> resource(new Resource());
+		//printf("param");
+		if (!resource->loadFromFile(filename,secondParam))
+			throw std::runtime_error("TextureHolder::load - failed to load " + filename);
+
+		auto inserted = mResourceMap.insert(std::make_pair(id, std::move(resource)));
+		assert(inserted.second);
+	}
+
+	const Resource& get(Identifier id) const{
 		auto found = mResourceMap.find(id);
 		assert(found != mResourceMap.end());
 
