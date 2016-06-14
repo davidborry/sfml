@@ -2,7 +2,7 @@
 #define GAME_H
 
 #include "SFML\Graphics.hpp"
-#include "util\ResourceHolder.h"
+#include "util\ResourceHolder.hpp"
 
 
 class Game{
@@ -26,7 +26,7 @@ private:
 	bool isAccelerating=false, isSlowingDown=false, isRotatingLeft = false, isRotatingRight=false;
 	const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
 
-	ResourceHolder textures;
+	ResourceHolder<sf::Texture, Textures::ID> textures;
 
 };
 

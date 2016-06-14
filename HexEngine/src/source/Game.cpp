@@ -4,12 +4,12 @@ using namespace std;
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mPlayer(){
 
-	
 	textures.load(Textures::Airplane, "Resources/img/plane.png");
 	
 	mPlayer.setTexture(textures.get(Textures::Airplane));
 
 	auto size = textures.get(Textures::Airplane).getSize();
+
 	mPlayer.setPosition(100.f, 100.f);
 
 	mPlayer.setOrigin(size.x / 2.f, size.y / 2.f);
