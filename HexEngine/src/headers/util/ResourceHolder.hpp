@@ -6,9 +6,7 @@
 #include <assert.h>
 
 
-namespace Textures{
-	enum ID{Landscape, Airplane, Missile};
-}
+
 
 namespace Fonts{
 	enum ID{Pacifico};

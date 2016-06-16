@@ -3,7 +3,8 @@
 
 #include "SFML\Graphics.hpp"
 #include "util\ResourceHolder.hpp"
-
+#include "util\ResourceIdentifier.hpp"
+#include "entities\Aircraft.hpp"
 
 class Game{
 
@@ -20,7 +21,7 @@ private:
 	void movePlayer(sf::Time deltaTime);
 
 	sf::RenderWindow mWindow;
-	sf::Sprite mPlayer;
+	Aircraft* mPlayer;
 
 	sf::Text mText;
 

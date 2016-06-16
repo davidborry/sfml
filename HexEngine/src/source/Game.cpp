@@ -2,28 +2,24 @@
 
 using namespace std;
 
-Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mPlayer(), mText(){
+Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mText(){
 
 	textures.load(Textures::Airplane, "Resources/img/plane.png");
 	fonts.load(Fonts::Pacifico, "Resources/font/Pacifico.ttf");
 	
-	mPlayer.setTexture(textures.get(Textures::Airplane));
+	mPlayer = new Aircraft(Aircraft::Type::DEFAULT, textures);
 
 	auto size = textures.get(Textures::Airplane).getSize();
 
+	mPlayer->setPosition(100.f, 100.f);
 	
-	
-
-	mPlayer.setPosition(100.f, 100.f);
-	mPlayer.setOrigin(size.x / 2.f, size.y / 2.f);
-
 	mText.setFont(fonts.get(Fonts::Pacifico));
 	mText.setString("Test");
 	mText.setColor(sf::Color::Red);
 	mText.setPosition(0, 0);
 
 	mWindow.clear();
-	mWindow.draw(mPlayer);
+	mWindow.draw(*mPlayer);
 	mWindow.draw(mText);
 	mWindow.display();
 
@@ -78,10 +74,10 @@ void Game::update(sf::Time deltaTime)
 		playerSpeed -= 1.f;
 
 	if (isRotatingLeft)
-		mPlayer.rotate(1.f*playerSpeed*deltaTime.asSeconds());
+		mPlayer->rotate(1.f*playerSpeed*deltaTime.asSeconds());
 	
 	if (isRotatingRight)
-		mPlayer.rotate(-1.f*playerSpeed*deltaTime.asSeconds());
+		mPlayer->rotate(-1.f*playerSpeed*deltaTime.asSeconds());
 
 	movePlayer(deltaTime);
 	
@@ -93,7 +89,7 @@ void Game::render()
 	
 
 	mWindow.clear();
-	mWindow.draw(mPlayer);
+	mWindow.draw(*mPlayer);
 	mWindow.draw(mText);
 	mWindow.display();
 }
@@ -112,7 +108,7 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 
 void Game::movePlayer(sf::Time deltaTime){
 	
-	float angleRad = (3.1415926536 / 180)*(mPlayer.getRotation());
+	float angleRad = (3.1415926536 / 180)*(mPlayer->getRotation());
 	float cosT = playerSpeed * cos(angleRad);
 	float sinT = playerSpeed * sin(angleRad);
 
@@ -122,5 +118,5 @@ void Game::movePlayer(sf::Time deltaTime){
 	sf::Vector2f a(0.f, 0.f);
 	a.x -= sinT;
 	a.y += cosT;
-	mPlayer.move(a *  deltaTime.asSeconds());
+	mPlayer->move(a *  deltaTime.asSeconds());
 }
