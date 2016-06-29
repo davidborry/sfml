@@ -5,6 +5,7 @@
 #include "util\ResourceHolder.hpp"
 #include "util\ResourceIdentifier.hpp"
 #include "entities\Aircraft.hpp"
+#include <iostream>
 
 class Game{
 
@@ -31,6 +32,8 @@ private:
 
 	ResourceHolder<sf::Texture, Textures::ID> textures;
 	ResourceHolder<sf::Font, Fonts::ID> fonts;
+
+	sf::View mWorldView;
 
 };
 

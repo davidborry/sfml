@@ -2,21 +2,30 @@
 
 using namespace std;
 
-Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mText(){
+Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mText(), mWorldView(){
 
-	textures.load(Textures::Airplane, "Resources/img/plane.png");
+	textures.load(Textures::Eagle, "Resources/img/plane.png");
 	fonts.load(Fonts::Pacifico, "Resources/font/Pacifico.ttf");
+
+	mWindow.setFramerateLimit(60);
+	mWindow.setVerticalSyncEnabled(true);
 	
-	mPlayer = new Aircraft(Aircraft::Type::DEFAULT, textures);
+	mPlayer = new Aircraft(Aircraft::Type::EAGLE, textures);
 
-	auto size = textures.get(Textures::Airplane).getSize();
+	cout << mWorldView.getSize().x << endl;
 
-	mPlayer->setPosition(100.f, 100.f);
+	mWorldView.setCenter(100.f,0.f);
+	mPlayer->setPosition(100.f, 0.f);
+
+	mWorldView.setSize(1024, 720);
+	//mWorldView.zoom(0.52);
 	
 	mText.setFont(fonts.get(Fonts::Pacifico));
 	mText.setString("Test");
 	mText.setColor(sf::Color::Red);
 	mText.setPosition(0, 0);
+
+	mWindow.setView(mWorldView);
 
 	mWindow.clear();
 	mWindow.draw(*mPlayer);
@@ -80,18 +89,21 @@ void Game::update(sf::Time deltaTime)
 		mPlayer->rotate(-1.f*playerSpeed*deltaTime.asSeconds());
 
 	movePlayer(deltaTime);
-	
-	
+
+		
 }
 
 void Game::render()
 {
-	
 
 	mWindow.clear();
+	mWindow.setView(mWorldView);
 	mWindow.draw(*mPlayer);
 	mWindow.draw(mText);
+
+	//	cout << mPlayer->getWorldPosition().x << "-" << mPlayer->getWorldPosition().y << endl;
 	mWindow.display();
+
 }
 
 void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
@@ -108,7 +120,7 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 
 void Game::movePlayer(sf::Time deltaTime){
 	
-	float angleRad = (3.1415926536 / 180)*(mPlayer->getRotation());
+	float angleRad = (3.1415926536 / 180.f)*(mPlayer->getRotation());
 	float cosT = playerSpeed * cos(angleRad);
 	float sinT = playerSpeed * sin(angleRad);
 
@@ -119,4 +131,8 @@ void Game::movePlayer(sf::Time deltaTime){
 	a.x -= sinT;
 	a.y += cosT;
 	mPlayer->move(a *  deltaTime.asSeconds());
+
+	//mWorldView.setRotation(mPlayer->getRotation());
+	mWorldView.move(a * deltaTime.asSeconds());
+
 }
