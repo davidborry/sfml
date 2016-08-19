@@ -5,6 +5,7 @@ using namespace std;
 Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mText(), mWorldView(){
 
 	textures.load(Textures::Eagle, "Resources/img/plane.png");
+	textures.load(Textures::Desert, "Resources/img/sand.jpg");
 	fonts.load(Fonts::Pacifico, "Resources/font/Pacifico.ttf");
 
 	mWindow.setFramerateLimit(60);
@@ -69,6 +70,10 @@ void Game::processEvents(){
 		case sf::Event::KeyReleased:
 			handlePlayerInput(event.key.code, false);
 			break;
+
+		case sf::Event::MouseWheelMoved:
+			handleMouseWheel(event.mouseWheel);
+			break;
 		}
 	}
 }
@@ -116,6 +121,28 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 		isRotatingLeft = isPressed;
 	else if (key == sf::Keyboard::D)
 		isRotatingRight = isPressed;
+	
+}
+
+void Game::handleMouseWheel(sf::Event::MouseWheelEvent mouseWheel){
+	static int zoom = 0;
+	int delta = mouseWheel.delta;
+	//cout << zoom << endl;
+
+	if (delta == 1){
+		if (++zoom <= 10)
+			mWorldView.zoom(0.9);
+		else
+			zoom = 10;
+	}
+
+	else {
+		if (--zoom >= -10)
+			mWorldView.zoom(1.1);
+		else
+			zoom = -10;
+	}
+	
 }
 
 void Game::movePlayer(sf::Time deltaTime){

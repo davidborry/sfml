@@ -18,7 +18,7 @@ private:
 	void update(sf::Time deltaTime);
 	void render();
 	void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
-
+	void handleMouseWheel(sf::Event::MouseWheelEvent mouseWheel);
 	void movePlayer(sf::Time deltaTime);
 
 	sf::RenderWindow mWindow;
