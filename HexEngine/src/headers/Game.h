@@ -1,10 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "SFML\Graphics.hpp"
-#include "util\ResourceHolder.hpp"
-#include "util\ResourceIdentifier.hpp"
-#include "entities\Aircraft.hpp"
+#include "World.h"
+
 #include <iostream>
 
 class Game{
@@ -34,6 +32,8 @@ private:
 	ResourceHolder<sf::Font, Fonts::ID> fonts;
 
 	sf::View mWorldView;
+
+	World mWorld;
 
 };
 

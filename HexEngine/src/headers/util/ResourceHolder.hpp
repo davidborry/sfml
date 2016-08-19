@@ -6,7 +6,7 @@
 #include <assert.h>
 
 
-
+using namespace std;
 
 namespace Fonts{
 	enum ID{Pacifico};
@@ -37,6 +37,13 @@ public:
 
 		auto inserted = mResourceMap.insert(std::make_pair(id, std::move(resource)));
 		assert(inserted.second);
+	}
+
+	Resource& get(Identifier id){
+		auto found = mResourceMap.find(id);
+		assert(found != mResourceMap.end());
+
+		return *found->second;
 	}
 
 	const Resource& get(Identifier id) const{

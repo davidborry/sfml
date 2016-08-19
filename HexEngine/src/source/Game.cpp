@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mText(), mWorldView(){
+Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mWorld(mWindow), mText(), mWorldView() {
 
 	textures.load(Textures::Eagle, "Resources/img/plane.png");
 	textures.load(Textures::Desert, "Resources/img/sand.jpg");
@@ -21,17 +21,18 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mText(), mWorldView(
 	mWorldView.setSize(1024, 720);
 	//mWorldView.zoom(0.52);
 	
+	sf::Font a = fonts.get(Fonts::Pacifico);
 	mText.setFont(fonts.get(Fonts::Pacifico));
 	mText.setString("Test");
 	mText.setColor(sf::Color::Red);
 	mText.setPosition(0, 0);
 
-	mWindow.setView(mWorldView);
+	/**mWindow.setView(mWorldView);
 
 	mWindow.clear();
 	mWindow.draw(*mPlayer);
 	mWindow.draw(mText);
-	mWindow.display();
+	mWindow.display();**/
 
 }
 
@@ -80,7 +81,8 @@ void Game::processEvents(){
 
 void Game::update(sf::Time deltaTime)
 {
-	sf::Vector2f movement(0.f, 0.f);
+	mWorld.update(deltaTime);
+	/**sf::Vector2f movement(0.f, 0.f);
 	if (isAccelerating && playerSpeed < 300)
 		playerSpeed += 1.f;
 
@@ -93,7 +95,7 @@ void Game::update(sf::Time deltaTime)
 	if (isRotatingRight)
 		mPlayer->rotate(-1.f*playerSpeed*deltaTime.asSeconds());
 
-	movePlayer(deltaTime);
+	movePlayer(deltaTime);**/
 
 		
 }
@@ -102,9 +104,10 @@ void Game::render()
 {
 
 	mWindow.clear();
-	mWindow.setView(mWorldView);
-	mWindow.draw(*mPlayer);
-	mWindow.draw(mText);
+	mWorld.draw();
+	mWindow.setView(mWindow.getDefaultView());
+	//mWindow.draw(*mPlayer);
+	//mWindow.draw(mText);
 
 	//	cout << mPlayer->getWorldPosition().x << "-" << mPlayer->getWorldPosition().y << endl;
 	mWindow.display();
@@ -131,14 +134,14 @@ void Game::handleMouseWheel(sf::Event::MouseWheelEvent mouseWheel){
 
 	if (delta == 1){
 		if (++zoom <= 10)
-			mWorldView.zoom(0.9);
+			mWorldView.zoom(0.9f);
 		else
 			zoom = 10;
 	}
 
 	else {
 		if (--zoom >= -10)
-			mWorldView.zoom(1.1);
+			mWorldView.zoom(1.1f);
 		else
 			zoom = -10;
 	}
@@ -147,7 +150,7 @@ void Game::handleMouseWheel(sf::Event::MouseWheelEvent mouseWheel){
 
 void Game::movePlayer(sf::Time deltaTime){
 	
-	float angleRad = (3.1415926536 / 180.f)*(mPlayer->getRotation());
+	float angleRad = (3.1415926536f / 180.f)*(mPlayer->getRotation());
 	float cosT = playerSpeed * cos(angleRad);
 	float sinT = playerSpeed * sin(angleRad);
 
