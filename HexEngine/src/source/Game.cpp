@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mWorld(mWindow), mText(), mWorldView() {
+Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mWorld(mWindow), mText(), mWorldView(), mPaused(false) {
 
 	textures.load(Textures::Eagle, "Resources/img/plane.png");
 	textures.load(Textures::Desert, "Resources/img/sand.jpg");
@@ -18,7 +18,7 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mWorld(mWindow), mTe
 	mWorldView.setCenter(100.f,0.f);
 	mPlayer->setPosition(100.f, 0.f);
 
-	mWorldView.setSize(1024, 720);
+	//mWorldView.setSize(1024, 720);
 	//mWorldView.zoom(0.52);
 	
 	sf::Font a = fonts.get(Fonts::Pacifico);
@@ -37,17 +37,22 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mWorld(mWindow), mTe
 }
 
 void Game::run(){
+
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 	while (mWindow.isOpen())
 	{
+		
 		processEvents();
 		timeSinceLastUpdate += clock.restart();
 		while (timeSinceLastUpdate > TimePerFrame)
 		{
 			timeSinceLastUpdate -= TimePerFrame;
+			
+			if (!mPaused)
+				update(TimePerFrame);
+
 			processEvents();
-			update(TimePerFrame);
 		}
 		render();
 	}
@@ -65,24 +70,30 @@ void Game::processEvents(){
 			break;
 
 		case sf::Event::KeyPressed:
-			handlePlayerInput(event.key.code, true);
+			handleKeyEvent(event.key.code);
 			break;
 
-		case sf::Event::KeyReleased:
-			handlePlayerInput(event.key.code, false);
+		case sf::Event::LostFocus:
+			mPaused = true;
 			break;
 
-		case sf::Event::MouseWheelMoved:
-			handleMouseWheel(event.mouseWheel);
+		case sf::Event::GainedFocus:
+			mPaused = false;
 			break;
 		}
+
 	}
 }
 
 void Game::update(sf::Time deltaTime)
 {
+	sf::Vector2i windowCenter(mWindow.getSize() / 2u);
+	sf::Vector2i mousePosition = sf::Mouse::getPosition(mWindow);
+	sf::Vector2i delta = windowCenter - mousePosition;
+	sf::Mouse::setPosition(windowCenter, mWindow);
+	//printf("%i - %i\n",delta.x,delta.y);
 	mWorld.update(deltaTime);
-	/**sf::Vector2f movement(0.f, 0.f);
+	/*sf::Vector2f movement(0.f, 0.f);
 	if (isAccelerating && playerSpeed < 300)
 		playerSpeed += 1.f;
 
@@ -95,7 +106,7 @@ void Game::update(sf::Time deltaTime)
 	if (isRotatingRight)
 		mPlayer->rotate(-1.f*playerSpeed*deltaTime.asSeconds());
 
-	movePlayer(deltaTime);**/
+	movePlayer(deltaTime);*/
 
 		
 }
@@ -112,40 +123,6 @@ void Game::render()
 	//	cout << mPlayer->getWorldPosition().x << "-" << mPlayer->getWorldPosition().y << endl;
 	mWindow.display();
 
-}
-
-void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
-{
-	if (key == sf::Keyboard::Z)
-		isAccelerating = isPressed;
-	else if (key == sf::Keyboard::S)
-		isSlowingDown = isPressed;
-	else if (key == sf::Keyboard::Q)
-		isRotatingLeft = isPressed;
-	else if (key == sf::Keyboard::D)
-		isRotatingRight = isPressed;
-	
-}
-
-void Game::handleMouseWheel(sf::Event::MouseWheelEvent mouseWheel){
-	static int zoom = 0;
-	int delta = mouseWheel.delta;
-	//cout << zoom << endl;
-
-	if (delta == 1){
-		if (++zoom <= 10)
-			mWorldView.zoom(0.9f);
-		else
-			zoom = 10;
-	}
-
-	else {
-		if (--zoom >= -10)
-			mWorldView.zoom(1.1f);
-		else
-			zoom = -10;
-	}
-	
 }
 
 void Game::movePlayer(sf::Time deltaTime){
@@ -165,4 +142,10 @@ void Game::movePlayer(sf::Time deltaTime){
 	//mWorldView.setRotation(mPlayer->getRotation());
 	mWorldView.move(a * deltaTime.asSeconds());
 
+}
+
+void Game::handleKeyEvent(sf::Keyboard::Key key){
+	if (key == sf::Keyboard::Space){
+		mPaused = !mPaused;
+	}
 }

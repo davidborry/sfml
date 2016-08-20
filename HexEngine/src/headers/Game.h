@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "World.h"
+#include "util\Category.hpp"
 
 #include <iostream>
 
@@ -15,9 +16,9 @@ private:
 	void processEvents();
 	void update(sf::Time deltaTime);
 	void render();
-	void handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
-	void handleMouseWheel(sf::Event::MouseWheelEvent mouseWheel);
 	void movePlayer(sf::Time deltaTime);
+
+	void handleKeyEvent(sf::Keyboard::Key event);
 
 	sf::RenderWindow mWindow;
 	Aircraft* mPlayer;
@@ -34,6 +35,8 @@ private:
 	sf::View mWorldView;
 
 	World mWorld;
+
+	bool mPaused;
 
 };
 

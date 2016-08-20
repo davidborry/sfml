@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <SFML\Graphics.hpp>
+#include "../commands/Command.hpp"
 
 class SceneNode : public sf::Transformable, public sf::Drawable, private sf::NonCopyable {
 
@@ -21,6 +22,10 @@ public:
 
 	sf::Transform getWorldTransform() const;
 	sf::Vector2f getWorldPosition() const;
+
+	virtual unsigned int getCategory() const;
+
+	void onCommand(const Command& command, sf::Time dt);
 
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
