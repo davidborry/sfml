@@ -1,6 +1,20 @@
 #include "../headers/Player.hpp"
 #include <iostream>
 
+Player::Player(){
+	mKeyBinding[sf::Keyboard::Left] = Action::MoveLeft;
+	mKeyBinding[sf::Keyboard::Right] = Action::MoveRight;
+	mKeyBinding[sf::Keyboard::Up] = Action::MoveUp;
+	mKeyBinding[sf::Keyboard::Down] = Action::MoveDown;
+
+	initializeActions();
+
+	FOREACH(auto& pair, mActionBinding){
+		pair.second.category = Category::PlayerAircraft;
+	}
+
+}
+
 
 template<typename GameObject, typename Function>
 std::function<void(SceneNode&,sf::Time)>
@@ -37,29 +51,53 @@ void Player::handleEvents(const sf::Event& event, CommandQueue& commands){
 }
 
 void Player::handleRealTimeInputs(CommandQueue& commands){
+
+	FOREACH(auto& pair, mKeyBinding)
+		if (sf::Keyboard::isKeyPressed(pair.first) && isRealTimeAction(pair.second))
+			commands.push(mActionBinding[pair.second]);
+	
+
+}
+
+void Player::initializeActions(){
 	const float playerSpeed = 200.f;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-		//printf("test");
+	mActionBinding[MoveLeft].action = derivedAction<Aircraft>(AircraftMover(-playerSpeed, 0.f));
+	mActionBinding[MoveRight].action = derivedAction<Aircraft>(AircraftMover(playerSpeed, 0.f));
+	mActionBinding[MoveUp].action = derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
+	mActionBinding[MoveDown].action = derivedAction<Aircraft>(AircraftMover(0.f, playerSpeed));
+}
 
-		Command moveLeft;
-		moveLeft.category = Category::PlayerAircraft;
-		moveLeft.action = derivedAction<Aircraft>(AircraftMover(-playerSpeed, 0.f));
-		commands.push(moveLeft);
+bool Player::isRealTimeAction(Action action){
+	switch (action){
+	case MoveLeft:
+	case MoveRight:
+	case MoveUp:
+	case MoveDown:
+		return true;
 
+	default:
+		return false;
+	}
+}
+
+void Player::assignKey(sf::Keyboard::Key key, Action action){
+	for (auto itr = mKeyBinding.begin(); itr != mKeyBinding.end();){
+		if (itr->second == action)
+			mKeyBinding.erase(itr++);
+
+		else
+			itr++;
 	}
 
-	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-		Command moveRight;
-		moveRight.category = Category::PlayerAircraft;
-		moveRight.action = derivedAction<Aircraft>(AircraftMover(playerSpeed, 0.f));
-		commands.push(moveRight);
-	}
+	mKeyBinding[key] = action;
+}
 
-	 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)){
-		Command moveUp;
-		moveUp.category = Category::PlayerAircraft;
-		moveUp.action = derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
-		commands.push(moveUp);
-	}
+sf::Keyboard::Key Player::getAssignedKey(Action action) const{
+	FOREACH(auto pair, mKeyBinding)
+		if (pair.second == action)
+			return pair.first;
+
+	return sf::Keyboard::Unknown;
+	
 }
