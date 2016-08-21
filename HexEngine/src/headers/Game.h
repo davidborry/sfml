@@ -3,6 +3,7 @@
 
 #include "World.h"
 #include "util\Category.hpp"
+#include "Player.hpp"
 
 #include <iostream>
 
@@ -13,7 +14,7 @@ public:
 	void run();
 	
 private:
-	void processEvents();
+	void processInputs();
 	void update(sf::Time deltaTime);
 	void render();
 	void movePlayer(sf::Time deltaTime);
@@ -21,7 +22,7 @@ private:
 	void handleKeyEvent(sf::Keyboard::Key event);
 
 	sf::RenderWindow mWindow;
-	Aircraft* mPlayer;
+	//Aircraft* mPlayer;
 
 	sf::Text mText;
 
@@ -37,6 +38,8 @@ private:
 	World mWorld;
 
 	bool mPaused;
+
+	Player mPlayer;
 
 };
 

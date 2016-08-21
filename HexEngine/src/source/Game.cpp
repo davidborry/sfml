@@ -11,12 +11,12 @@ Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mWorld(mWindow), mTe
 	mWindow.setFramerateLimit(60);
 	mWindow.setVerticalSyncEnabled(true);
 	
-	mPlayer = new Aircraft(Aircraft::Type::EAGLE, textures);
+	//mPlayer = new Aircraft(Aircraft::Type::EAGLE, textures);
 
 	cout << mWorldView.getSize().x << endl;
 
 	mWorldView.setCenter(100.f,0.f);
-	mPlayer->setPosition(100.f, 0.f);
+	//mPlayer->setPosition(100.f, 0.f);
 
 	//mWorldView.setSize(1024, 720);
 	//mWorldView.zoom(0.52);
@@ -43,7 +43,6 @@ void Game::run(){
 	while (mWindow.isOpen())
 	{
 		
-		processEvents();
 		timeSinceLastUpdate += clock.restart();
 		while (timeSinceLastUpdate > TimePerFrame)
 		{
@@ -52,18 +51,21 @@ void Game::run(){
 			if (!mPaused)
 				update(TimePerFrame);
 
-			processEvents();
+			processInputs();
 		}
 		render();
 	}
 
 }
 
-void Game::processEvents(){
+void Game::processInputs(){
+	CommandQueue& commands = mWorld.getCommandQueue();
 	sf::Event event;
 	while (mWindow.pollEvent(event))
 	{
 		
+		if(!mPaused)
+			mPlayer.handleEvents(event, commands);
 		switch (event.type){
 		case sf::Event::Closed:
 			mWindow.close();
@@ -83,6 +85,9 @@ void Game::processEvents(){
 		}
 
 	}
+
+	if (!mPaused)
+		mPlayer.handleRealTimeInputs(commands);
 }
 
 void Game::update(sf::Time deltaTime)
@@ -127,7 +132,7 @@ void Game::render()
 
 void Game::movePlayer(sf::Time deltaTime){
 	
-	float angleRad = (3.1415926536f / 180.f)*(mPlayer->getRotation());
+	/*float angleRad = (3.1415926536f / 180.f)*(mPlayer->getRotation());
 	float cosT = playerSpeed * cos(angleRad);
 	float sinT = playerSpeed * sin(angleRad);
 
@@ -140,7 +145,7 @@ void Game::movePlayer(sf::Time deltaTime){
 	mPlayer->move(a *  deltaTime.asSeconds());
 
 	//mWorldView.setRotation(mPlayer->getRotation());
-	mWorldView.move(a * deltaTime.asSeconds());
+	mWorldView.move(a * deltaTime.asSeconds());*/
 
 }
 
