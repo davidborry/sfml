@@ -4,8 +4,8 @@ using namespace std;
 
 Game::Game() : mWindow(sf::VideoMode(640, 480), "My Game"), mWorld(mWindow), mText(), mWorldView(), mPaused(false) {
 
-	textures.load(Textures::Eagle, "Resources/img/plane.png");
-	textures.load(Textures::Desert, "Resources/img/sand.jpg");
+	textures.load(Resources::Textures::Eagle, "Resources/img/plane.png");
+	textures.load(Resources::Textures::Desert, "Resources/img/sand.jpg");
 	fonts.load(Fonts::Pacifico, "Resources/font/Pacifico.ttf");
 
 	mWindow.setFramerateLimit(60);

@@ -1,15 +1,15 @@
 #include "../../headers/entities/Aircraft.hpp"
 
-Textures::ID toTextureID(Aircraft::Type id){
+Resources::Textures::ID toTextureID(Aircraft::Type id){
 	switch (id){
 	case Aircraft::Type::EAGLE:
-		return Textures::Eagle;
+		return Resources::Textures::Eagle;
 
 	case Aircraft::Type::RAPTOR:
-		return Textures::Raptor;
+		return Resources::Textures::Raptor;
 
 	case Aircraft::Type::DEFAULT:
-		return Textures::Airplane;
+		return Resources::Textures::Airplane;
 	}
 }
 

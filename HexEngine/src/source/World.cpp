@@ -14,9 +14,9 @@ mPlayerAircraft(nullptr)
 }
 
 void World::loadTextures(){
-	mTextures.load(Textures::Eagle, "Resources/img/plane.png");
-	mTextures.load(Textures::Raptor, "Resources/img/drone.png");
-	mTextures.load(Textures::Desert, "Resources/img/sand.jpg");
+	mTextures.load(Resources::Textures::Eagle, "Resources/img/plane.png");
+	mTextures.load(Resources::Textures::Raptor, "Resources/img/drone.png");
+	mTextures.load(Resources::Textures::Desert, "Resources/img/sand.jpg");
 }
 
 void World::buildScene(){
@@ -29,7 +29,7 @@ void World::buildScene(){
 	}
 
 	//Initialize desert sprite node
-	sf::Texture& texture = mTextures.get(Textures::Desert);
+	sf::Texture& texture = mTextures.get(Resources::Textures::Desert);
 	sf::IntRect textureRect(mWorldBounds);
 	texture.setRepeated(true);
 

@@ -30,7 +30,7 @@ private:
 	bool isAccelerating=false, isSlowingDown=false, isRotatingLeft = false, isRotatingRight=false;
 	const sf::Time TimePerFrame = sf::seconds(1.f / 60.f);
 
-	ResourceHolder<sf::Texture, Textures::ID> textures;
+	ResourceHolder<sf::Texture, Resources::Textures::ID> textures;
 	ResourceHolder<sf::Font, Fonts::ID> fonts;
 
 	sf::View mWorldView;
