@@ -1,5 +1,9 @@
+#ifndef STATE_HPP
+#define STATE_HPP
+
 #include "SFML\Graphics.hpp"
 #include "StateIdentifiers.hpp"
+#include "../util/ResourceIdentifier.hpp"
 #include <memory>
 
 class StateStack;
@@ -9,7 +13,12 @@ class State{
 public:
 	typedef std::unique_ptr<State> Ptr;
 	struct Context{
+		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, Player& player);
 
+		sf::RenderWindow* window;
+		TextureHolder* textures;
+		FontHolder* fonts;
+		Player* player;
 	};
 
 public:
@@ -31,3 +40,5 @@ private:
 	StateStack* mStack;
 	Context mContext;
 };
+
+#endif

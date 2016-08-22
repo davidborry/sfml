@@ -1,13 +1,15 @@
 #include "SFML\Graphics.hpp"
 #include "State.hpp"
 #include <functional>
+#include <assert.h>
+#include "../util/foreach.hpp"
 
 class StateStack : public sf::NonCopyable{
 public:
 	enum Action{
 		Push,
 		Pop,
-		Clear
+		Clear,
 	};
 
 public:
@@ -15,7 +17,6 @@ public:
 
 	template<typename T> 
 	void registerState(States::ID stateId);
-
 	void update(sf::Time dt);
 	void draw();
 	void handleEvent(const sf::Event& event);
@@ -31,8 +32,8 @@ private:
 	void applyPendingChanges();
 
 private:
-	struct PendingChanges{
-		explicit PendingChanges(Action action, States::ID stateID = States::None);
+	struct PendingChange{
+		explicit PendingChange(Action action, States::ID stateID = States::None);
 
 		Action action;
 		States::ID stateID;
@@ -40,7 +41,7 @@ private:
 
 private:
 	std::vector<State::Ptr> mStack;
-	std::vector<PendingChanges> mPendingList;
+	std::vector<PendingChange> mPendingList;
 	State::Context mContext;
 	std::map < States::ID, std::function<State::Ptr()>> mFactories;
 };

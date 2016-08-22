@@ -2,8 +2,10 @@
 #define GAME_H
 
 #include "World.h"
+#include "states\StateStack.hpp"
 #include "util\Category.hpp"
 #include "Player.hpp"
+#include "util\Utility.hpp"
 
 #include <iostream>
 

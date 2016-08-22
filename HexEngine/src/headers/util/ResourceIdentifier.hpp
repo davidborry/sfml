@@ -18,6 +18,7 @@ namespace Resources{
 			Raptor,
 			Desert,
 			Airplane,
+			TitleScreen,
 		};
 
 	}
