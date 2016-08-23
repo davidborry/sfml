@@ -1,6 +1,5 @@
 #ifndef RESOURCEIDENTIFIERS_HPP
 #define RESOURCEIDENTIFIERS_HPP
-#pragma once
 
 // Forward declaration of SFML classes
 namespace sf
