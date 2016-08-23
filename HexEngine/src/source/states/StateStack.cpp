@@ -5,13 +5,6 @@ StateStack::StateStack(State::Context context) : mStack(), mPendingList(), mFact
 
 }
 
-template<typename T>
-void StateStack::registerState(States::ID stateID){
-	mFactories[stateID] = [this]() {
-		return State::Ptr(new T(*this, mContext));
-	}
-}
-
 State::Ptr StateStack::createState(States::ID stateID){
 	auto found = mFactories.find(stateID);
 	assert(found != mFactories.end());
@@ -76,4 +69,8 @@ void StateStack::clearStates(){
 StateStack::PendingChange::PendingChange(Action action, States::ID stateID) : action(action), stateID(stateID)
 {
 
+}
+
+bool StateStack::isEmpty() const{
+	return mStack.empty();
 }

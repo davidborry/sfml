@@ -14,21 +14,20 @@ LoadingState::LoadingState(StateStack& stack, Context context) : State(stack, co
 
 	mProgressBarBackground.setFillColor(sf::Color::White);
 	mProgressBarBackground.setSize(sf::Vector2f(viewSize.x - 10.f, 10.f));
-	mProgressBar.setPosition(10, mLoadingText.getPosition().y + 40.f);
+	mProgressBarBackground.setPosition(10, mLoadingText.getPosition().y + 40.f);
 
 	mProgressBar.setFillColor(sf::Color(100, 100, 100));
 	mProgressBar.setSize(sf::Vector2f(200, 10));
 	mProgressBar.setPosition(10, mLoadingText.getPosition().y + 40);
 
 	setCompletion(0.f);
-
 	mLoadingTask.execute();
 }
 
 void LoadingState::draw(){
 	sf::RenderWindow& window = *getContext().window;
 	window.setView(window.getDefaultView());
-
+	//printf("d");
 	window.draw(mLoadingText);
 	window.draw(mProgressBarBackground);
 	window.draw(mProgressBar);
@@ -40,10 +39,9 @@ bool LoadingState::update(sf::Time dt){
 		requestStackPush(States::Game);
 	}
 
-	else{
+	else
 		setCompletion(mLoadingTask.getCompletion());
-	}
-
+	
 	return true;
 }
 
@@ -52,8 +50,12 @@ bool LoadingState::handleEvent(const sf::Event& event){
 }
 
 void LoadingState::setCompletion(float percent){
+
+	printf("%f\n", percent);
 	if (percent > 1.f)
 		percent = 1.f;
 
-	mProgressBar.setSize(sf::Vector2f(mProgressBar.getSize().x*percent, mProgressBar.getSize().y));
+	mProgressBar.setSize(sf::Vector2f(mProgressBarBackground.getSize().x * percent, mProgressBar.getSize().y));
+	//mProgressBar.setPosition(10, mLoadingText.getPosition().y + 40);
+
 }

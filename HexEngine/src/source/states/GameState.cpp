@@ -5,6 +5,7 @@ State(stack, context),
 mWorld(*context.window),
 mPlayer(*context.player)
 {
+	
 }
 
 void GameState::draw(){

@@ -20,7 +20,7 @@ float ParallelTask::getCompletion(){
 	sf::Lock lock(mMutex);
 
 	// 100% at 10 seconds of elapsed time
-	return mElapsedTime.getElapsedTime().asSeconds() / 10.f;
+	return mElapsedTime.getElapsedTime().asSeconds() / 3.f;
 }
 
 void ParallelTask::runTask(){
@@ -29,13 +29,19 @@ void ParallelTask::runTask(){
 	bool ended = false;
 
 	while (!ended){
-		sf::Lock lock(mMutex); //Protect the clock
-		if (mElapsedTime.getElapsedTime().asSeconds() > 10.f)
+		sf::Lock lock(mMutex);
+		//Protect the clock
+
+		//printf("%f\n", mElapsedTime.getElapsedTime().asSeconds());
+
+		if (mElapsedTime.getElapsedTime().asSeconds() > 3.f)
 			ended = true;
 	}
 
-	{ // mFinished may be accessed from multiple threads, protect it
+	{
+		// mFinished may be accessed from multiple threads, protect it
 		sf::Lock lock(mMutex);
-		ended = true;
+		mFinished = true;
 	}
+	
 }

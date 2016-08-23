@@ -1,13 +1,16 @@
 #include <iostream>
-#include "src\headers\Game.h"
+#include "src\headers\Application.hpp"
 
 int main(){
 
 	printf("Hello world!\n");
 
 	try{
-		Game game;
-		game.run();
+		//Game game;
+		//game.run();
+
+		Application app;
+		app.run();
 	}
 
 	catch (std::exception& e){

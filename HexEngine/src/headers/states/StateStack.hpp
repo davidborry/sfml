@@ -1,3 +1,6 @@
+#ifndef STATESTACK_HPP
+#define STATESTACK_HPP
+
 #include "SFML\Graphics.hpp"
 #include "State.hpp"
 #include <functional>
@@ -16,7 +19,12 @@ public:
 	explicit StateStack(State::Context context);
 
 	template<typename T> 
-	void registerState(States::ID stateId);
+	void registerState(States::ID stateID){
+		mFactories[stateID] = [this]() {
+			return State::Ptr(new T(*this, mContext));
+		};
+	}
+
 	void update(sf::Time dt);
 	void draw();
 	void handleEvent(const sf::Event& event);
@@ -45,3 +53,5 @@ private:
 	State::Context mContext;
 	std::map < States::ID, std::function<State::Ptr()>> mFactories;
 };
+
+#endif

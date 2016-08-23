@@ -26,6 +26,7 @@ mOptionIndex(0)
 	exitOption.setString("Exit");
 	centerOrigin(exitOption);
 	exitOption.setPosition(playOption.getPosition() + sf::Vector2f(0.f, 30.f));
+	mOptions.push_back(exitOption);
 
 	updateOptionText();
 
@@ -37,8 +38,11 @@ void MenuState::draw(){
 	window.draw(mBackgroundSprite);
 
 	FOREACH(sf::Text& text, mOptions){
+		//printf("1\n");
 		window.draw(text);
 	}
+
+	//printf("\n");
 	
 }
 
@@ -53,7 +57,7 @@ bool MenuState::handleEvent(const sf::Event& event){
 	if (event.key.code == sf::Keyboard::Return){
 		if (mOptionIndex == Play){
 			requestStackPop();
-			requestStackPush(States::Game);
+			requestStackPush(States::Loading);
 		}
 
 		else if (mOptionIndex == Exit)
