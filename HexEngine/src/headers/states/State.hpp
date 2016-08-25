@@ -22,12 +22,14 @@ public:
 	};
 
 public:
-	State(StateStack& stack, Context context);
+	State(StateStack& stack, Context context, int param = 0);
 	virtual ~State();
 
 	virtual void draw() = 0;
 	virtual bool update(sf::Time dt) = 0;
 	virtual bool handleEvent(const sf::Event& event) = 0;
+
+	void setParam(int param);
 
 protected:
 	void requestStackPush(States::ID stateId);
@@ -36,9 +38,11 @@ protected:
 
 	Context getContext() const;
 
-private:
+protected:
 	StateStack* mStack;
 	Context mContext;
+
+	int mParam;
 };
 
 #endif

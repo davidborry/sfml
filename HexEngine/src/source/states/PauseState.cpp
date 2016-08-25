@@ -2,8 +2,8 @@
 #include "../../headers/util/ResourceHolder.hpp"
 #include "../../headers/util/Utility.hpp"
 
-PauseState::PauseState(StateStack& stack, Context context) :
-State(stack, context),
+PauseState::PauseState(StateStack& stack, Context context, int param) :
+State(stack, context, param),
 mBackgroundSprite(),
 mPauseText(),
 mInstructionText()
@@ -40,6 +40,8 @@ void PauseState::draw(){
 }
 
 bool PauseState::update(sf::Time dt){
+	//printf("%i\n", mParam);
+
 	return false;
 }
 

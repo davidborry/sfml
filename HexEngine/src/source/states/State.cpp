@@ -10,7 +10,7 @@ player(&player)
 
 }
 
-State::State(StateStack& stack, Context context): mStack(&stack), mContext(context)
+State::State(StateStack& stack, Context context, int param) : mStack(&stack), mContext(context), mParam(param)
 {
 
 }
@@ -33,4 +33,8 @@ void State::requestStackClear(){
 
 State::Context State::getContext() const{
 	return mContext;
+}
+
+void State::setParam(int param){
+	mParam = param;
 }

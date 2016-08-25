@@ -2,8 +2,8 @@
 #include "../../headers/util/Utility.hpp"
 #include "../../headers/util/ResourceHolder.hpp"
 
-TitleState::TitleState(StateStack& stack, Context context): 
-State(stack,context),
+TitleState::TitleState(StateStack& stack, Context context, int param): 
+State(stack,context, param),
 mText(),
 mShowText(true),
 mTextEffectTime(sf::Time::Zero)

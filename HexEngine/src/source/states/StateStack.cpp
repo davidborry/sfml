@@ -10,6 +10,7 @@ State::Ptr StateStack::createState(States::ID stateID){
 	assert(found != mFactories.end());
 
 	return found->second();
+
 }
 
 void StateStack::handleEvent(const sf::Event& event){

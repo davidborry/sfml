@@ -2,27 +2,20 @@
 #define MENUSTATE_HPP
 
 #include "State.hpp"
+#include "../gui/Button.hpp"
+#include "../gui/Container.hpp"
 
 class MenuState : public State{
 public:
-	MenuState(StateStack& stack, Context context);
+	MenuState(StateStack& stack, Context context, int param = 0);
 
 	virtual void draw();
 	virtual bool update(sf::Time dt);
 	virtual bool handleEvent(const sf::Event& event);
 
-	void updateOptionText();
-
-private:
-	enum OptionName{
-		Play,
-		Exit,
-	};
-
 private:
 	sf::Sprite mBackgroundSprite;
-	std::vector<sf::Text> mOptions;
-	std::size_t mOptionIndex;
+	GUI::Container mGUIContainer;
 };
 
 #endif

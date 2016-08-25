@@ -19,9 +19,9 @@ public:
 	explicit StateStack(State::Context context);
 
 	template<typename T> 
-	void registerState(States::ID stateID){
-		mFactories[stateID] = [this]() {
-			return State::Ptr(new T(*this, mContext));
+	void registerState(States::ID stateID, int param = 0){
+		mFactories[stateID] = [this,param]() {
+			return State::Ptr(new T(*this, mContext,param));
 		};
 	}
 

@@ -2,7 +2,7 @@
 #include "../../headers/util/ResourceHolder.hpp"
 #include "../../headers/util/Utility.hpp"
 
-LoadingState::LoadingState(StateStack& stack, Context context) : State(stack, context){
+LoadingState::LoadingState(StateStack& stack, Context context, int param) : State(stack, context, param){
 	sf::RenderWindow& window = *getContext().window;
 	sf::Font& font = context.fonts->get(Resources::Fonts::Main);
 	sf::Vector2f viewSize = window.getView().getSize();
@@ -51,7 +51,7 @@ bool LoadingState::handleEvent(const sf::Event& event){
 
 void LoadingState::setCompletion(float percent){
 
-	printf("%f\n", percent);
+	//printf("%f\n", percent);
 	if (percent > 1.f)
 		percent = 1.f;
 

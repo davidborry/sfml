@@ -18,6 +18,9 @@ namespace Resources{
 			Desert,
 			Airplane,
 			TitleScreen,
+			ButtonNormal,
+			ButtonPressed,
+			ButtonSelected
 		};
 
 	}
