@@ -20,14 +20,23 @@ mGUIContainer()
 		requestStackPush(States::Loading);
 	});
 
+	auto settingsButton = std::make_shared<GUI::Button>(*context.fonts, *context.textures);
+	settingsButton->setPosition(100, 300);
+	settingsButton->setText("Settings");
+	settingsButton->setCallBack([this]() {
+		requestStackPush(States::Settings);
+	});
+
 	auto exitButton = std::make_shared<GUI::Button>(*context.fonts, *context.textures);
-	exitButton->setPosition(100, 300);
+	exitButton->setPosition(100, 350);
 	exitButton->setText("Exit");
 	exitButton->setCallBack([this]() {
 		requestStackPop();
 	});
 
+
 	mGUIContainer.pack(playButton);
+	mGUIContainer.pack(settingsButton);
 	mGUIContainer.pack(exitButton);
 	
 }
