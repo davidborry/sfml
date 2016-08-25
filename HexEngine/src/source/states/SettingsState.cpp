@@ -3,7 +3,7 @@
 
 SettingsState::SettingsState(StateStack& stack, Context context, int param) :
 State(stack, context),
-mGUIContainer()
+mGUIContainer(context.window)
 {
 	addButtonLabel(Player::MoveLeft, 150.f, "Move Left", context);
 	addButtonLabel(Player::MoveRight, 200.f, "Move Right", context);

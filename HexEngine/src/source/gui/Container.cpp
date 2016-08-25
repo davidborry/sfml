@@ -1,9 +1,10 @@
 #include "../../headers/gui/Container.hpp"
 #include "../../headers/util/foreach.hpp"
-
+#include "../../headers/gui/Button.hpp"
 namespace GUI{
-	Container::Container() :
+	Container::Container(sf::Window* window) :
 		mChildren(),
+		mWindow(window),
 		mSelectedChild(-1)
 	{
 	}
@@ -23,6 +24,10 @@ namespace GUI{
 		if (hasSelection() && mChildren[mSelectedChild]->isActive())
 			mChildren[mSelectedChild]->handleEvent(event);
 
+		else if (event.type == sf::Event::MouseMoved)
+			selectOnClick();
+			
+
 		else if (event.type == sf::Event::KeyPressed){
 			if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::Z)
 				selectPrevious();
@@ -34,6 +39,11 @@ namespace GUI{
 				if (hasSelection())
 					mChildren[mSelectedChild]->activate();
 		}
+
+		else if (event.type == sf::Event::MouseButtonPressed)
+			if (hasSelection())
+				mChildren[mSelectedChild]->activate();
+		
 	}
 
 	void Container::select(std::size_t index){
@@ -72,6 +82,28 @@ namespace GUI{
 
 		//Select that component
 		select(next);
+	}
+
+	void Container::selectOnClick(){
+		sf::Vector2i coordinates = sf::Mouse::getPosition(*mWindow);
+
+			for (std::size_t child = 0; child < mChildren.size(); child++){
+				auto button = dynamic_cast<GUI::Button*>(mChildren[child].get());
+
+				if ( button != NULL){
+					sf::Vector2f position = mChildren[child]->getPosition();
+					sf::Vector2u size = button->getTextureSize();
+					
+					//printf("%i,%i\n", size.x, size.y);
+
+					if (coordinates.x >= position.x && coordinates.x <= position.x + size.x
+						&& coordinates.y >= position.y && coordinates.y <= position.y + size.y){
+						//printf("SDFSF");
+						select(child);
+					}
+				}
+
+			}
 	}
 
 	bool Container::hasSelection() const{

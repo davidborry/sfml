@@ -10,7 +10,7 @@ namespace GUI{
 		typedef std::shared_ptr<Container> Ptr;
 
 	public:
-		Container();
+		Container(sf::Window* window);
 
 		void pack(Component::Ptr component);
 
@@ -25,9 +25,13 @@ namespace GUI{
 		void selectNext();
 		void selectPrevious();
 
+		void selectOnClick();
+
 	private:
 		std::vector<Component::Ptr> mChildren;
 		int mSelectedChild;
+
+		sf::Window* mWindow;
 	};
 }
 

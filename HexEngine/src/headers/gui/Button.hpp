@@ -29,6 +29,8 @@ namespace GUI{
 
 		virtual void handleEvent(const sf::Event& event);
 
+		sf::Vector2u getTextureSize() const;
+
 	private:
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
@@ -41,6 +43,7 @@ namespace GUI{
 		sf::Sprite mSprite;
 		sf::Text mText;
 		bool mIsToggle;
+
 	};
 }
 

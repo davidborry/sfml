@@ -5,7 +5,7 @@
 
 MenuState::MenuState(StateStack& stack, Context context, int param) : 
 State(stack, context, param),
-mGUIContainer()
+mGUIContainer(context.window)
 {
 	sf::Texture& texture = context.textures->get(Resources::Textures::TitleScreen);
 	sf::Font& font = context.fonts->get(Resources::Fonts::Main);

@@ -37,6 +37,7 @@ namespace GUI{
 	void Button::deselect(){
 		Component::deselect();
 		mSprite.setTexture(mNormalTexture);
+		
 	}
 
 	void Button::activate(){
@@ -79,4 +80,9 @@ namespace GUI{
 	void Button::setToggle(bool flag){
 		mIsToggle = flag;
 	}
+
+	sf::Vector2u Button::getTextureSize() const{
+		return mNormalTexture.getSize();
+	}
 }
+

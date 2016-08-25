@@ -8,7 +8,8 @@ namespace States{
 		Menu,
 		Loading,
 		Game,
-		Pause
+		Pause,
+		Settings
 	};
 }
 
