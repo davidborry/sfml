@@ -4,7 +4,7 @@
 
 GameState::GameState(StateStack& stack, Context context, int param) :
 State(stack, context,param),
-mWorld(*context.window),
+mWorld(*context.window,*context.fonts),
 mPlayer(*context.player)
 {
 	

@@ -14,9 +14,25 @@ sf::Vector2f Entity::getVelocity() const{
 }
 
 void Entity::updateCurrent(sf::Time dt){
-	move(mVelocity*dt.asSeconds());
+		move(mVelocity*dt.asSeconds());
 }
 
 void Entity::accelerate(sf::Vector2f velocity){
 	mVelocity += velocity;
+}
+
+void Entity::damage(int points){
+	mHitPoints -= points;
+}
+
+void Entity::repair(int points){
+	mHitPoints += points;
+}
+
+void Entity::destroy(){
+	mHitPoints = 0;
+}
+
+int Entity::getHitPoints() const{
+	return mHitPoints;
 }

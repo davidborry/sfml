@@ -16,7 +16,7 @@ namespace Resources{
 			Eagle,
 			Raptor,
 			Desert,
-			Airplane,
+			Avenger,
 			TitleScreen,
 			ButtonNormal,
 			ButtonPressed,

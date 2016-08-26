@@ -55,7 +55,6 @@ void Player::handleRealTimeInputs(CommandQueue& commands){
 	FOREACH(auto& pair, mKeyBinding)
 		if (sf::Keyboard::isKeyPressed(pair.first) && isRealTimeAction(pair.second))
 			commands.push(mActionBinding[pair.second]);
-	
 
 }
 

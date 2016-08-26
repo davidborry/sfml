@@ -14,12 +14,19 @@ public:
 	sf::Vector2f getVelocity() const;
 	void accelerate(sf::Vector2f velocity);
 
+	void repair(int points);
+	void damage(int points);
+	void destroy();
 
-private:
+	int getHitPoints() const;
+
+
+protected:
 	virtual void updateCurrent(sf::Time dt);
 
-private:
+protected:
 	sf::Vector2f mVelocity;
+	int mHitPoints;
 };
 
 #endif
