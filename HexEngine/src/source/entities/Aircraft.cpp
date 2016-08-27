@@ -1,5 +1,6 @@
 #include "../../headers/entities/Aircraft.hpp"
 #include "../../headers/util/Utility.hpp"
+#include "../../headers/commands/CommandQueue.hpp"
 
 Resources::Textures::ID toTextureID(Aircraft::Type id){
 	switch (id){
@@ -18,14 +19,30 @@ namespace{
 	const std::vector<AircraftData> Table = initializeAircraftData();
 }
 
-Aircraft::Aircraft(Type type): 
-mType(type),
-mDirectionIndex(0),
-mTravelledDistance(0.f)
-{
-}
 
-Aircraft::Aircraft(Type type, const TextureHolder& textures, const FontHolder& fonts): mType(type), mSprite(textures.get(toTextureID(type))) {
+
+Aircraft::Aircraft(Type type, const TextureHolder& textures, const FontHolder& fonts): 
+Entity(Table[type].hitpoints),
+mType(type),
+mSprite(textures.get(toTextureID(type))),
+mDirectionIndex(0),
+mTravelledDistance(0.f),
+mFireCountdown(sf::Time::Zero),
+mIsFiring(false),
+mIsLaunchingMissile(false),
+mFireRateLevel(1),
+mFireCommand(),
+mMissileCommand(),
+mSpreadLevel(1)
+
+
+{
+	mFireCommand.category = Category::SceneAirLayer;
+	mFireCommand.action = 
+	[this, &textures](SceneNode& node, sf::Time) {
+		createBullets(node, textures);
+	};
+
 	sf::FloatRect bounds = mSprite.getLocalBounds();
 	mSprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 
@@ -37,12 +54,13 @@ Aircraft::Aircraft(Type type, const TextureHolder& textures, const FontHolder& f
 	// printf("%i\n", Table[mType].hitpoints);
 }
 
-void Aircraft::updateCurrent(sf::Time dt){
-	Entity::updateCurrent(dt);
+void Aircraft::updateCurrent(sf::Time dt, CommandQueue& commands){
+	Entity::updateCurrent(dt, commands);
 	mHealthDisplay->setString(toString(getHitPoints()) + " HP");
 	mHealthDisplay->setPosition(0.f, 50.f);
 	mHealthDisplay->setRotation(-getRotation());
 
+	checkProjectileLaunch(dt, commands);
 	updateMovementPattern(dt);
 }
 
@@ -87,4 +105,73 @@ void Aircraft::updateMovementPattern(sf::Time dt){
 
 float Aircraft::getMaxSpeed() const{
 	return Table[mType].speed;
+}
+
+void Aircraft::fire(){
+	mIsFiring = true;
+}
+
+void Aircraft::launchMissile(){
+	mIsLaunchingMissile = true;
+}
+
+void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands){
+
+	if (!isAllied())
+		fire();
+
+	if (mIsFiring && mFireCountdown <= sf::Time::Zero){
+		commands.push(mFireCommand);
+		mFireCountdown += sf::seconds(1.f / (mFireRateLevel + 1));
+		mIsFiring = false;
+	}
+
+	else if (mFireCountdown > sf::Time::Zero)
+		mFireCountdown -= dt;
+
+	if (mIsLaunchingMissile){
+		printf("test\n");
+		commands.push(mMissileCommand);
+		mIsLaunchingMissile = false;
+	}
+}
+
+void Aircraft::createBullets(SceneNode& node, const TextureHolder& textures) const {
+	//printf("Test\n");
+	Projectile::Type type = isAllied() ? Projectile::AlliedBullet : Projectile::EnemyBullet;
+	
+	switch (mSpreadLevel){
+	case 1:
+		createProjectile(node, type, 0.0f, 0.5f, textures);
+		break;
+		
+	case 2:
+		createProjectile(node, type, -0.33f, 0.33f, textures);
+		createProjectile(node, type, +0.33f, 0.33f, textures);
+		break;
+
+	case 3:
+		createProjectile(node, type, -0.5f, 0.33f, textures);
+		createProjectile(node, type, 0.0f, 0.5f, textures);
+		createProjectile(node, type, +0.5f, 0.33f, textures);
+		break;
+	}
+
+}
+
+void Aircraft::createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const {
+	std::unique_ptr<Projectile> projectile(new Projectile(type, textures));
+
+	sf::Vector2f offset(xOffset * mSprite.getGlobalBounds().width, yOffset*mSprite.getGlobalBounds().height);
+	sf::Vector2f velocity(0.f, projectile->getMaxSpeed());
+
+	float sign = isAllied() ? -1.f : +1.f;
+	projectile->setPosition(getWorldPosition() + offset * sign);
+	projectile->setVelocity(velocity * sign);
+
+	node.attachChild(std::move(projectile));
+}
+
+bool Aircraft::isAllied() const{
+	return mType == EAGLE;
 }

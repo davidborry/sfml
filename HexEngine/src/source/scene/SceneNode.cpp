@@ -1,8 +1,14 @@
 #include "../../headers/scene/SceneNode.hpp"
+#include "../../headers/commands/Command.hpp"
 
-SceneNode::SceneNode() : mParent(nullptr){}
+SceneNode::SceneNode(Category::Type category) : 
+mDefaultCategory(category),
+mParent(nullptr)
+{
+}
 
 void SceneNode::attachChild(Ptr child){
+	//printf("node");
 	child->mParent = this;
 	mChildren.push_back(std::move(child));
 }
@@ -38,16 +44,16 @@ void SceneNode::drawChildren(sf::RenderTarget& target, sf::RenderStates states) 
 	}
 }
 
-void SceneNode::update(sf::Time dt){
-	updateCurrent(dt);
-	updateChildren(dt);
+void SceneNode::update(sf::Time dt, CommandQueue& commands){
+	updateCurrent(dt, commands);
+	updateChildren(dt, commands);
 }
 
-void SceneNode::updateCurrent(sf::Time dt){}
+void SceneNode::updateCurrent(sf::Time dt, CommandQueue& commands){}
 
-void SceneNode::updateChildren(sf::Time dt){
+void SceneNode::updateChildren(sf::Time dt, CommandQueue& commands){
 	for (auto itr = mChildren.begin(); itr != mChildren.end(); ++itr){
-		(*itr)->update(dt);
+		(*itr)->update(dt, commands);
 	}
 }
 
@@ -65,7 +71,7 @@ sf::Vector2f SceneNode::getWorldPosition() const{
 }
 
 unsigned int SceneNode::getCategory() const{
-	return Category::Scene;
+	return mDefaultCategory;
 }
 
 void SceneNode::onCommand(const Command& command, sf::Time dt){

@@ -1,5 +1,10 @@
 #include "../../headers/entities/Entity.hpp"
 
+Entity::Entity(int hitPoints) : 
+mHitPoints(hitPoints)
+{
+}
+
 void Entity::setVelocity(sf::Vector2f velocity){
 	mVelocity = velocity;
 }
@@ -13,7 +18,7 @@ sf::Vector2f Entity::getVelocity() const{
 	return mVelocity;
 }
 
-void Entity::updateCurrent(sf::Time dt){
+void Entity::updateCurrent(sf::Time dt, CommandQueue& commands){
 		move(mVelocity*dt.asSeconds());
 }
 

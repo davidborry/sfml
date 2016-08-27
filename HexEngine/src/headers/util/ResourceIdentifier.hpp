@@ -17,6 +17,8 @@ namespace Resources{
 			Raptor,
 			Desert,
 			Avenger,
+			Bullet,
+			Missile,
 			TitleScreen,
 			ButtonNormal,
 			ButtonPressed,

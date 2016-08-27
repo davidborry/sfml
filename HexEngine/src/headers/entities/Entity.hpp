@@ -8,6 +8,8 @@
 
 class Entity : public SceneNode{
 public:
+	explicit Entity(int hitPoints);
+
 	void setVelocity(sf::Vector2f vector);
 	void setVelocity(float vx, float vy);
 	
@@ -22,7 +24,7 @@ public:
 
 
 protected:
-	virtual void updateCurrent(sf::Time dt);
+	virtual void updateCurrent(sf::Time dt, CommandQueue& commands);
 
 protected:
 	sf::Vector2f mVelocity;

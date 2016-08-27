@@ -26,17 +26,24 @@ mEnemySpointPoints()
 }
 
 void World::loadTextures(){
+	mTextures.load(Resources::Textures::Desert, "Resources/img/sand.jpg");
+
 	mTextures.load(Resources::Textures::Eagle, "Resources/img/plane.png");
 	mTextures.load(Resources::Textures::Raptor, "Resources/img/drone.png");
-	mTextures.load(Resources::Textures::Desert, "Resources/img/sand.jpg");
 	mTextures.load(Resources::Textures::Avenger, "Resources/img/Avenger.png");
+
+	mTextures.load(Resources::Textures::Bullet, "Resources/img/Bullet.png");
+	mTextures.load(Resources::Textures::Missile, "Resources/img/Missile.png");
 }
 
 void World::buildScene(){
 
 	//Initialize each layer
 	for (std::size_t i = 0; i < LayerCount; ++i){
-		SceneNode::Ptr layer(new SceneNode());
+
+		Category::Type category = (i == Air) ? Category::SceneAirLayer : Category::None;
+
+		SceneNode::Ptr layer(new SceneNode(category));
 		mSceneLayers[i] = layer.get();
 		mSceneGraph.attachChild(std::move(layer));
 	}
@@ -87,7 +94,7 @@ void World::update(sf::Time dt){
 	if (velocity.x != 0 && velocity.y != 0)
 		mPlayerAircraft->setVelocity(velocity/std::sqrt(2.f));
 
-	mSceneGraph.update(dt);
+	mSceneGraph.update(dt, mCommandQueue);
 
 	sf::FloatRect viewBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize());
 	const float borderDistance = 40.f;
@@ -137,7 +144,7 @@ void World::addEnemy(Aircraft::Type type, float x, float y){
 }
 
 void World::addEnemies(){
-	addEnemy(Aircraft::RAPTOR, 0.f, 500.f);
+	addEnemy(Aircraft::AVENGER, 0.f, 500.f);
 	addEnemy(Aircraft::RAPTOR, 0.f, 1000.f);
 	addEnemy(Aircraft::RAPTOR, +100.f, 1100.f);
 	addEnemy(Aircraft::RAPTOR, -100.f, 1100.f);
