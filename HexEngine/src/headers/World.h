@@ -12,6 +12,16 @@
 
 
 class World : private sf::NonCopyable{
+
+public:
+	struct SpawnPoint{
+		SpawnPoint(Aircraft::Type type, float x, float y);
+
+		Aircraft::Type type;
+		float x;
+		float y;
+	};
+
 public:
 	explicit World(sf::RenderWindow& window, FontHolder& fonts);
 	void update(sf::Time dt);
@@ -22,6 +32,13 @@ public:
 private:
 	void loadTextures();
 	void buildScene();
+
+	void spawnEnemies();
+	void addEnemy(Aircraft::Type type, float x, float y);
+	void addEnemies();
+
+	sf::FloatRect getViewBounds() const;
+	sf::FloatRect getBattlefieldBounds() const;
 
 private:
 	enum Layer{
@@ -45,6 +62,7 @@ private:
 
 	CommandQueue mCommandQueue;
 	
+	std::vector<SpawnPoint> mEnemySpointPoints;
 	
 };
 

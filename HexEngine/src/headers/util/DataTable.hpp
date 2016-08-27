@@ -6,10 +6,19 @@
 
 class Aircraft;
 
+
+struct Direction{
+	Direction(float angle, float distance);
+
+	float angle;
+	float distance;
+};
+
 struct AircraftData{
 	int hitpoints;
 	float speed;
 	Resources::Textures::ID texture;
+	std::vector<Direction> directions;
 };
 
 std::vector<AircraftData> initializeAircraftData();

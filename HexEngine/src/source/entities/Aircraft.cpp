@@ -18,7 +18,12 @@ namespace{
 	const std::vector<AircraftData> Table = initializeAircraftData();
 }
 
-Aircraft::Aircraft(Type type): mType(type){}
+Aircraft::Aircraft(Type type): 
+mType(type),
+mDirectionIndex(0),
+mTravelledDistance(0.f)
+{
+}
 
 Aircraft::Aircraft(Type type, const TextureHolder& textures, const FontHolder& fonts): mType(type), mSprite(textures.get(toTextureID(type))) {
 	sf::FloatRect bounds = mSprite.getLocalBounds();
@@ -37,6 +42,8 @@ void Aircraft::updateCurrent(sf::Time dt){
 	mHealthDisplay->setString(toString(getHitPoints()) + " HP");
 	mHealthDisplay->setPosition(0.f, 50.f);
 	mHealthDisplay->setRotation(-getRotation());
+
+	updateMovementPattern(dt);
 }
 
 void Aircraft::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const{
@@ -54,4 +61,30 @@ unsigned int Aircraft::getCategory() const{
 	default:
 		return Category::EnemyAircraft;
 	}
+}
+
+void Aircraft::updateMovementPattern(sf::Time dt){
+	const std::vector<Direction>& directions = Table[mType].directions;
+	if (!directions.empty()){
+		float distanceToTravel = directions[mDirectionIndex].distance;
+
+		if (mTravelledDistance > distanceToTravel){
+			mDirectionIndex = (mDirectionIndex + 1) % directions.size();
+			mTravelledDistance = 0.f;
+		}
+
+		// 0° in SFML = Right orientation.
+		float radians = toRadian(directions[mDirectionIndex].angle + 90.f);
+		float vx = getMaxSpeed() * std::cos(radians);
+		float vy = getMaxSpeed() * std::sin(radians);
+
+		setVelocity(vx, vy);
+		mTravelledDistance += getMaxSpeed() * dt.asSeconds();
+		
+	}
+		
+}
+
+float Aircraft::getMaxSpeed() const{
+	return Table[mType].speed;
 }

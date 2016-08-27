@@ -20,4 +20,7 @@ std::string toString(const T& value){
 void centerOrigin(sf::Sprite& sprite);
 void centerOrigin(sf::Text& text);
 
+float toDegree(float radian);
+float toRadian(float degree);
+
 #endif
