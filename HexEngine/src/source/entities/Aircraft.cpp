@@ -19,8 +19,6 @@ namespace{
 	const std::vector<AircraftData> Table = initializeAircraftData();
 }
 
-
-
 Aircraft::Aircraft(Type type, const TextureHolder& textures, const FontHolder& fonts): 
 Entity(Table[type].hitpoints),
 mType(type),
@@ -41,6 +39,12 @@ mSpreadLevel(1)
 	mFireCommand.action = 
 	[this, &textures](SceneNode& node, sf::Time) {
 		createBullets(node, textures);
+	};
+
+	mMissileCommand.category = Category::SceneAirLayer;
+	mMissileCommand.action = 
+		[this, &textures](SceneNode& node, sf::Time){
+		createProjectile(node, Projectile::Missile, 0.f, 0.5f, textures);
 	};
 
 	sf::FloatRect bounds = mSprite.getLocalBounds();
@@ -117,6 +121,8 @@ void Aircraft::launchMissile(){
 
 void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands){
 
+	
+
 	if (!isAllied())
 		fire();
 
@@ -128,6 +134,7 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands){
 
 	else if (mFireCountdown > sf::Time::Zero)
 		mFireCountdown -= dt;
+	
 
 	if (mIsLaunchingMissile){
 		printf("test\n");

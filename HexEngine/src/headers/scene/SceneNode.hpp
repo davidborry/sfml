@@ -45,4 +45,6 @@ private:
 	Category::Type mDefaultCategory;
 };
 
+float distance(const SceneNode& lhs, const SceneNode& rhs);
+
 #endif

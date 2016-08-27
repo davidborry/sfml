@@ -15,7 +15,8 @@ mWorldBounds(0.f, 0.f, mWorldView.getSize().x, 2000.f),
 mSpawnPosition(mWorldView.getSize().x/2, mWorldBounds.height - mWorldView.getSize().y),
 mScrollSpeed(-50.f),
 mPlayerAircraft(nullptr),
-mEnemySpointPoints()
+mEnemySpointPoints(),
+mActiveEnemies()
 {
 	loadTextures();
 	buildScene();
@@ -90,6 +91,8 @@ void World::update(sf::Time dt){
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop(), dt);
 
+	guideMissiles();
+
 	sf::Vector2f velocity = mPlayerAircraft->getVelocity();
 	if (velocity.x != 0 && velocity.y != 0)
 		mPlayerAircraft->setVelocity(velocity/std::sqrt(2.f));
@@ -157,4 +160,45 @@ void World::addEnemies(){
 		return lhs.y < rhs.y;
 	});
 
+}
+
+void World::guideMissiles(){
+	Command enemyCollector;
+	enemyCollector.category = Category::EnemyAircraft;
+	enemyCollector.action = derivedAction<Aircraft>(
+		[this](Aircraft& enemy, sf::Time)
+		{
+			if (!enemy.isDestroyed())
+				mActiveEnemies.push_back(&enemy);
+		});
+
+	Command missileGuider;
+	missileGuider.category = Category::AlliedProjectile;
+	missileGuider.action = derivedAction<Projectile>(
+		[this](Projectile& missile, sf::Time)
+		{
+			//Ignore unguided bullets
+			if (!missile.isGuided())
+				return;
+
+			float minDistance = std::numeric_limits<float>::max();
+			Aircraft* closestEnemy = nullptr;
+
+			FOREACH(Aircraft* enemy, mActiveEnemies){
+				float enemyDistance = distance(missile, *enemy);
+
+				if (enemyDistance < minDistance){
+					closestEnemy = enemy;
+					minDistance = enemyDistance;
+				}
+
+			}
+
+			if (closestEnemy)
+				missile.guideTowards(closestEnemy->getWorldPosition());
+		});
+
+	mCommandQueue.push(enemyCollector);
+	mCommandQueue.push(missileGuider);
+	mActiveEnemies.clear();
 }

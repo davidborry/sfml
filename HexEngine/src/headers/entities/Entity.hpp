@@ -21,6 +21,7 @@ public:
 	void destroy();
 
 	int getHitPoints() const;
+	bool isDestroyed() const;
 
 
 protected:

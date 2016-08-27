@@ -33,9 +33,7 @@ public:
 private:
 	virtual void updateCurrent(sf::Time dt, CommandQueue& commands);
 	void updateMovementPattern(sf::Time dt);
-
 	void checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
-
 	void createBullets(SceneNode& node, const TextureHolder& textures) const;
 	void createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
 

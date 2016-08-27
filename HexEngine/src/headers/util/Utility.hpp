@@ -2,6 +2,8 @@
 #define UTILITY_HPP
 
 #include <sstream>
+#include "SFML\Graphics.hpp"
+#include <cassert>
 
 namespace sf{
 	class Sprite;
@@ -22,5 +24,8 @@ void centerOrigin(sf::Text& text);
 
 float toDegree(float radian);
 float toRadian(float degree);
+
+float length(sf::Vector2f vector);
+sf::Vector2f unitVector(sf::Vector2f vector);
 
 #endif

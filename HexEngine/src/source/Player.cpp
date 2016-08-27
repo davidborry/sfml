@@ -7,7 +7,6 @@ Player::Player(){
 	mKeyBinding[sf::Keyboard::Z] = Action::MoveUp;
 	mKeyBinding[sf::Keyboard::S] = Action::MoveDown;
 	mKeyBinding[sf::Keyboard::Space] = Action::Fire;
-	mKeyBinding[sf::Keyboard::LShift] = Action::LaunchMissile;
 
 	initializeActions();
 
@@ -17,18 +16,6 @@ Player::Player(){
 
 }
 
-
-template<typename GameObject, typename Function>
-std::function<void(SceneNode&,sf::Time)>
-derivedAction(Function fn){
-	return[=](SceneNode& node, sf::Time dt){
-		//Check if cast is safe
-		assert(dynamic_cast<GameObject*>(&node) != nullptr);
-
-		//Downcast node and invoke function on it
-		fn(static_cast<GameObject&>(node), dt);
-	};
-}
 
 struct AircraftMover{
 	AircraftMover(float vx, float vy) : velocity(vx, vy){}
@@ -41,16 +28,30 @@ struct AircraftMover{
 };
 
 void Player::handleEvents(const sf::Event& event, CommandQueue& commands){
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::P){
-		Command output;
-		output.category = Category::PlayerAircraft;
-		output.action = [](SceneNode& s, sf::Time){
-			std::cout << s.getPosition().x << ',' << s.getPosition().y << endl;
-		};
+	if (event.type == sf::Event::KeyReleased){
+		if (event.key.code == sf::Keyboard::P){
+			Command output;
+			output.category = Category::PlayerAircraft;
+			output.action = [](SceneNode& s, sf::Time){
+				std::cout << s.getPosition().x << ',' << s.getPosition().y << endl;
+			};
 
-		commands.push(output);
+			commands.push(output);
+		}
+
+		else if (event.key.code == sf::Keyboard::LShift){
+			Command missile;
+			missile.category = Category::PlayerAircraft;
+			missile.action = derivedAction<Aircraft>([](Aircraft& a, sf::Time dt)
+			{
+				a.launchMissile();
+			});
+
+			commands.push(missile);
+		}
 	}
 }
+
 
 void Player::handleRealTimeInputs(CommandQueue& commands){
 
@@ -68,7 +69,6 @@ void Player::initializeActions(){
 	mActionBinding[MoveUp].action = derivedAction<Aircraft>(AircraftMover(0.f, -playerSpeed));
 	mActionBinding[MoveDown].action = derivedAction<Aircraft>(AircraftMover(0.f, playerSpeed));
 	mActionBinding[Fire].action = derivedAction<Aircraft>([](Aircraft& a, sf::Time dt) { a.fire(); });
-	mActionBinding[LaunchMissile].action = derivedAction<Aircraft>([](Aircraft& a, sf::Time dt){ a.launchMissile(); });
 }
 
 bool Player::isRealTimeAction(Action action){

@@ -8,6 +8,7 @@
 #include "scene\SpriteNode.hpp"
 #include "entities\Aircraft.hpp"
 #include "commands\CommandQueue.hpp"
+#include "util\Foreach.hpp"
 #include <array>
 
 
@@ -40,6 +41,8 @@ private:
 	sf::FloatRect getViewBounds() const;
 	sf::FloatRect getBattlefieldBounds() const;
 
+	void guideMissiles();
+
 private:
 	enum Layer{
 		Background,
@@ -63,6 +66,7 @@ private:
 	CommandQueue mCommandQueue;
 	
 	std::vector<SpawnPoint> mEnemySpointPoints;
+	std::vector<Aircraft*> mActiveEnemies;
 	
 };
 

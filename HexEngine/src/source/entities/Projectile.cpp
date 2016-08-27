@@ -13,6 +13,18 @@ mSprite(textures.get(Table[type].texture))
 }
 
 void Projectile::updateCurrent(sf::Time dt, CommandQueue& commands){
+	
+	if (isGuided()){
+		const float approachRate = 200.f;
+		sf::Vector2f newVelocity = unitVector(approachRate*dt.asSeconds()*mTargetDirection + getVelocity());
+
+		newVelocity *= getMaxSpeed();
+		float angle = std::atan2(newVelocity.y, newVelocity.x);
+		
+		setRotation(toDegree(angle) + 90);
+		setVelocity(newVelocity);
+	}
+	
 	Entity::updateCurrent(dt,commands);
 }
 
@@ -34,4 +46,13 @@ sf::FloatRect Projectile::getBoundingRect() const {
 
 float Projectile::getMaxSpeed() const {
 	return Table[mType].speed;
+}
+
+bool Projectile::isGuided() const{
+	return mType == Missile;
+}
+
+void Projectile::guideTowards(sf::Vector2f position){
+	assert(isGuided());
+	mTargetDirection = unitVector(position - getWorldPosition());
 }

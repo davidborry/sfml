@@ -23,8 +23,8 @@ private:
 private:
 	sf::Sprite mBackgroundSprite;
 	GUI::Container mGUIContainer;
-	std::array<GUI::Button::Ptr, Player::ActionCount> mBindingButtons;
-	std::array<GUI::Label::Ptr, Player::ActionCount> mBindingLabels;
+	std::array<GUI::Button::Ptr, Player::ActionCount - 2> mBindingButtons;
+	std::array<GUI::Label::Ptr, Player::ActionCount - 2> mBindingLabels;
 };
 
 #endif
