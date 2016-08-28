@@ -24,6 +24,8 @@ public:
 	virtual unsigned int getCategory() const;
 	float getMaxSpeed() const;
 
+	virtual sf::FloatRect getBoundingRect() const;
+
 	void fire();
 	void launchMissile();
 	void increaseFireRate();
@@ -31,7 +33,8 @@ public:
 	void increaseFireSpread();
 
 	bool isAllied() const;
-
+	virtual bool isMarkedForRemoval() const;
+	virtual void destroy();
 
 private:
 	virtual void updateCurrent(sf::Time dt, CommandQueue& commands);
@@ -45,6 +48,7 @@ private:
 	sf::Sprite mSprite;
 
 	TextNode* mHealthDisplay;
+	TextNode* mMissilesDisplay;
 
 	int mDirectionIndex;
 	float mTravelledDistance;
@@ -58,6 +62,8 @@ private:
 
 	Command mFireCommand;
 	Command mMissileCommand;
+
+	bool mIsMarkedForRemoval;
 };
 
 #endif

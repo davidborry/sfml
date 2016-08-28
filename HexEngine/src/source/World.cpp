@@ -16,7 +16,8 @@ mSpawnPosition(mWorldView.getSize().x/2, mWorldBounds.height - mWorldView.getSiz
 mScrollSpeed(-50.f),
 mPlayerAircraft(nullptr),
 mEnemySpointPoints(),
-mActiveEnemies()
+mActiveEnemies(),
+gameOver(false)
 {
 	loadTextures();
 	buildScene();
@@ -68,7 +69,7 @@ void World::buildScene(){
 	mSceneLayers[Air]->attachChild(std::move(leader));
 
 	std::unique_ptr<Pickup> health(new Pickup(Pickup::HealthRefill, mTextures));
-	health->setPosition(mSpawnPosition);
+	health->setPosition(mSpawnPosition - sf::Vector2f(0.f,50.f));
 	mSceneLayers[Air]->attachChild(std::move(health));
 	/**std::unique_ptr<Aircraft> leftEscort(new Aircraft(Aircraft::RAPTOR, mTextures, mFonts));
 	leftEscort->setPosition(-80.f, 50.f);
@@ -114,6 +115,12 @@ void World::update(sf::Time dt){
 	position.y = std::min(position.y, viewBounds.top + viewBounds.height - borderDistance);
 
 	mPlayerAircraft->setPosition(position);
+
+	handleCollisions();	
+
+	destroyEntitiesOutsideView();
+	mSceneGraph.removeWrecks();
+
 }
 
 CommandQueue& World::getCommandQueue(){
@@ -152,7 +159,7 @@ void World::addEnemy(Aircraft::Type type, float x, float y){
 }
 
 void World::addEnemies(){
-	addEnemy(Aircraft::AVENGER, 0.f, 500.f);
+	addEnemy(Aircraft::AVENGER, -100.f, 500.f);
 	addEnemy(Aircraft::RAPTOR, 0.f, 1000.f);
 	addEnemy(Aircraft::RAPTOR, +100.f, 1100.f);
 	addEnemy(Aircraft::RAPTOR, -100.f, 1100.f);
@@ -207,4 +214,66 @@ void World::guideMissiles(){
 	mCommandQueue.push(enemyCollector);
 	mCommandQueue.push(missileGuider);
 	mActiveEnemies.clear();
+}
+
+void World::handleCollisions(){
+	std::set < SceneNode::Pair > collisionPairs;
+	mSceneGraph.checkSceneCollision(mSceneGraph, collisionPairs);
+	//printf("%i\n", collisionPairs.size());
+
+	FOREACH(SceneNode::Pair pair, collisionPairs){
+		if (matchesCategories(pair, Category::PlayerAircraft, Category::EnemyAircraft)){
+			auto& player = static_cast<Aircraft&>(*pair.first);
+			auto& enemy = static_cast<Aircraft&>(*pair.second);
+
+			player.damage(enemy.getHitPoints());
+			if (player.isDestroyed())
+				gameOver = true;
+			enemy.destroy();
+		}
+
+		else if (matchesCategories(pair, Category::PlayerAircraft, Category::Pickup)){
+			auto& player = static_cast<Aircraft&>(*pair.first);
+			auto& pickup = static_cast<Pickup&>(*pair.second);
+
+			pickup.apply(player);
+			pickup.destroy();
+		}
+
+		else if (matchesCategories(pair, Category::EnemyProjectile, Category::PlayerAircraft)){
+			auto& projectile = static_cast<Projectile&>(*pair.first);
+			auto& aircraft = static_cast<Aircraft&>(*pair.second);
+
+			aircraft.damage(projectile.getDamage());
+			if (aircraft.isDestroyed())
+				gameOver = true;
+			projectile.destroy();
+
+		}
+
+		else if (matchesCategories(pair, Category::AlliedProjectile, Category::EnemyAircraft)){
+			auto& projectile = static_cast<Projectile&>(*pair.first);
+			auto& aircraft = static_cast<Aircraft&>(*pair.second);
+
+			aircraft.damage(projectile.getDamage());
+			projectile.destroy();
+
+		}
+	}
+
+}
+
+void World::destroyEntitiesOutsideView(){
+	Command command;
+	command.category = Category::Projectile | Category::EnemyAircraft;
+	command.action = derivedAction<Entity>([this](Entity& e, sf::Time){
+		if (!getBattlefieldBounds().intersects(e.getBoundingRect()))
+			e.destroy();
+	});
+
+	mCommandQueue.push(command);
+}
+
+bool World::gameStatus() const{
+	return gameOver;
 }

@@ -18,10 +18,10 @@ public:
 
 	void repair(int points);
 	void damage(int points);
-	void destroy();
+	virtual void destroy();
 
 	int getHitPoints() const;
-	bool isDestroyed() const;
+	virtual bool isDestroyed() const;
 
 
 protected:

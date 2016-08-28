@@ -55,6 +55,10 @@ mMissiles(3)
 	mHealthDisplay = healthDisplay.get();
 	attachChild(std::move(healthDisplay));
 
+	std::unique_ptr<TextNode> missileDisplay(new TextNode(fonts, ""));
+	mMissilesDisplay = missileDisplay.get();
+	attachChild(std::move(missileDisplay));
+
 	mHitPoints = Table[mType].hitpoints;
 	// printf("%i\n", Table[mType].hitpoints);
 }
@@ -64,6 +68,12 @@ void Aircraft::updateCurrent(sf::Time dt, CommandQueue& commands){
 	mHealthDisplay->setString(toString(getHitPoints()) + " HP");
 	mHealthDisplay->setPosition(0.f, 50.f);
 	mHealthDisplay->setRotation(-getRotation());
+
+	if (getCategory() == Category::PlayerAircraft){
+		mMissilesDisplay->setString(toString(mMissiles) + " Missiles");
+		mMissilesDisplay->setPosition(0.f, 70.f);
+		mMissilesDisplay->setRotation(-getRotation());
+	}
 
 	checkProjectileLaunch(dt, commands);
 	updateMovementPattern(dt);
@@ -78,8 +88,8 @@ unsigned int Aircraft::getCategory() const{
 	case EAGLE:
 		return Category::PlayerAircraft;
 
-	case RAPTOR:
-		return Category::AlliedAircraft;
+	/*case RAPTOR:
+		return Category::AlliedAircraft;*/
 
 	default:
 		return Category::EnemyAircraft;
@@ -122,8 +132,6 @@ void Aircraft::launchMissile(){
 }
 
 void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands){
-
-	
 
 	if (!isAllied())
 		fire();
@@ -197,4 +205,19 @@ void Aircraft::increaseFireSpread(){
 
 void Aircraft::CollectMissiles(int m){
 	mMissiles += m;
+}
+
+sf::FloatRect Aircraft::getBoundingRect() const{
+	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
+}
+
+bool Aircraft::isMarkedForRemoval() const {
+	return mIsMarkedForRemoval;
+}
+
+void Aircraft::destroy() {
+Entity::destroy();
+
+if (getCategory() != Category::PlayerAircraft)
+	mIsMarkedForRemoval = true;
 }

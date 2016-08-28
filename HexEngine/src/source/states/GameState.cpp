@@ -7,7 +7,7 @@ State(stack, context,param),
 mWorld(*context.window,*context.fonts),
 mPlayer(*context.player)
 {
-	
+	mPlayer.startGame();
 }
 
 void GameState::draw(){
@@ -18,7 +18,8 @@ bool GameState::update(sf::Time dt){
 	//printf("%i\n", mParam);
 
 	mWorld.update(dt);
-
+	if (mWorld.gameStatus())
+		mPlayer.endGame();
 
 	CommandQueue& commands = mWorld.getCommandQueue();
 	mPlayer.handleRealTimeInputs(commands);

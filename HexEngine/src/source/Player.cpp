@@ -1,7 +1,9 @@
 #include "../headers/Player.hpp"
 #include <iostream>
 
-Player::Player(){
+Player::Player():
+gameOver(false)
+{
 	mKeyBinding[sf::Keyboard::Q] = Action::MoveLeft;
 	mKeyBinding[sf::Keyboard::D] = Action::MoveRight;
 	mKeyBinding[sf::Keyboard::Z] = Action::MoveUp;
@@ -54,7 +56,8 @@ void Player::handleEvents(const sf::Event& event, CommandQueue& commands){
 
 
 void Player::handleRealTimeInputs(CommandQueue& commands){
-
+	//printf("%i\n", gameOver);
+	if (!gameOver)
 	FOREACH(auto& pair, mKeyBinding)
 		if (sf::Keyboard::isKeyPressed(pair.first) && isRealTimeAction(pair.second))
 			commands.push(mActionBinding[pair.second]);
@@ -104,4 +107,12 @@ sf::Keyboard::Key Player::getAssignedKey(Action action) const{
 
 	return sf::Keyboard::Unknown;
 	
+}
+
+void Player::endGame(){
+	gameOver = true;
+}
+
+void Player::startGame(){
+	gameOver = false;
 }

@@ -1,6 +1,7 @@
 #include "../../headers/scene/SceneNode.hpp"
 #include "../../headers/commands/Command.hpp"
 #include "../../headers/util/Utility.hpp"
+#include "../../headers/util/foreach.hpp"
 
 SceneNode::SceneNode(Category::Type category) : 
 mDefaultCategory(category),
@@ -31,6 +32,7 @@ SceneNode::Ptr SceneNode::detachChild(const SceneNode& node){
 
 void SceneNode::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 
+	//drawBoundingRect(target,states);
 	states.transform *= getTransform();
 	drawCurrent(target, states);
 	drawChildren(target, states);
@@ -83,6 +85,79 @@ void SceneNode::onCommand(const Command& command, sf::Time dt){
 		(*child)->onCommand(command, dt);
 }
 
+void SceneNode::drawBoundingRect(sf::RenderTarget& target, sf::RenderStates states) const {
+	sf::FloatRect rect = getBoundingRect();
+
+	sf::RectangleShape shape;
+
+	shape.setPosition(sf::Vector2f(rect.left, rect.top));
+	shape.setSize(sf::Vector2f(rect.width, rect.height));
+	shape.setFillColor(sf::Color::Transparent);
+	shape.setOutlineColor(sf::Color::Blue);
+	shape.setOutlineThickness(1.f);
+
+	target.draw(shape);
+}
+
+sf::FloatRect SceneNode::getBoundingRect() const{
+	return sf::FloatRect();
+}
+
+bool SceneNode::isDestroyed() const{
+	return false;
+	//No need for removal by default
+}
+
+void SceneNode::checkNodeCollision(SceneNode& node, std::set<SceneNode::Pair>& collisionPairs){
+	if (this != &node && collision(*this, node) && !isDestroyed() && !node.isDestroyed())
+		collisionPairs.insert(std::minmax(this, &node));
+
+	FOREACH(Ptr& child, mChildren){
+		child->checkNodeCollision(node, collisionPairs);
+	}
+}
+
+void SceneNode::checkSceneCollision(SceneNode& sceneGraph, std::set<SceneNode::Pair>& collisionPairs){
+	checkNodeCollision(sceneGraph, collisionPairs);
+
+	FOREACH(Ptr& child, sceneGraph.mChildren)
+		checkSceneCollision(*child, collisionPairs);
+}
+
 float distance(const SceneNode& lhs, const SceneNode& rhs){
 	return length(lhs.getWorldPosition() - rhs.getWorldPosition());
+}
+
+bool collision(const SceneNode& lhs, const SceneNode& rhs){
+	return lhs.getBoundingRect().intersects(rhs.getBoundingRect());
+}
+
+bool matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2){
+
+	unsigned int category1 = colliders.first->getCategory();
+	unsigned int category2 = colliders.second->getCategory();
+
+	if (type1 & category1 && type2 & category2)
+		return true;
+
+	else if (type1 & category2 && type2 & category1){
+		std::swap(colliders.first, colliders.second);
+		return true;
+	}
+
+	else
+		return false;
+}
+
+bool SceneNode::isMarkedForRemoval() const {
+	return isDestroyed();
+}
+
+void SceneNode::removeWrecks(){
+	auto wreckfieldBegin = std::remove_if(mChildren.begin(), mChildren.end(),
+		std::mem_fn(&SceneNode::isMarkedForRemoval));
+	mChildren.erase(wreckfieldBegin, mChildren.end());
+
+	std::for_each(mChildren.begin(), mChildren.end(),
+		std::mem_fn(&SceneNode::removeWrecks));
 }

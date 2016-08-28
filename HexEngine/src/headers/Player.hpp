@@ -29,6 +29,9 @@ public:
 	void assignKey(sf::Keyboard::Key key, Action action);
 	sf::Keyboard::Key getAssignedKey(Action action) const;
 
+	void endGame();
+	void startGame();
+
 private:
 	void initializeActions();
 	bool isRealTimeAction(Action action);
@@ -36,6 +39,8 @@ private:
 private:
 	std::map<sf::Keyboard::Key, Action> mKeyBinding;
 	std::map<Action, Command> mActionBinding;
+
+	bool gameOver;
 	
 };
 

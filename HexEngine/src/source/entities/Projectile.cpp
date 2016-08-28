@@ -23,6 +23,8 @@ void Projectile::updateCurrent(sf::Time dt, CommandQueue& commands){
 		
 		setRotation(toDegree(angle) + 90);
 		setVelocity(newVelocity);
+
+	 
 	}
 	
 	Entity::updateCurrent(dt,commands);
@@ -41,7 +43,7 @@ unsigned int Projectile::getCategory() const {
 }
 
 sf::FloatRect Projectile::getBoundingRect() const {
-	return mSprite.getGlobalBounds();
+	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
 }
 
 float Projectile::getMaxSpeed() const {
@@ -55,4 +57,8 @@ bool Projectile::isGuided() const{
 void Projectile::guideTowards(sf::Vector2f position){
 	assert(isGuided());
 	mTargetDirection = unitVector(position - getWorldPosition());
+}
+
+int Projectile::getDamage() const{
+	return Table[mType].damage;
 }

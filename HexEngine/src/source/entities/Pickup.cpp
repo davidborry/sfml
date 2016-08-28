@@ -20,7 +20,7 @@ void Pickup::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) cons
 }
 
 sf::FloatRect Pickup::getBoundingRect() const{
-	return mSprite.getGlobalBounds();
+	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
 }
 
 unsigned int Pickup::getCategory() const {

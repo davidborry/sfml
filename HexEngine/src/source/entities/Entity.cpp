@@ -28,6 +28,8 @@ void Entity::accelerate(sf::Vector2f velocity){
 
 void Entity::damage(int points){
 	mHitPoints -= points;
+	if(isDestroyed())
+		destroy();
 }
 
 void Entity::repair(int points){
@@ -35,6 +37,7 @@ void Entity::repair(int points){
 }
 
 void Entity::destroy(){
+//	printf("Dead\n");
 	mHitPoints = 0;
 }
 

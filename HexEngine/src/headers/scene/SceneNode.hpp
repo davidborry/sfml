@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <assert.h>
 #include <SFML\Graphics.hpp>
+#include <set>
 
 #include "../util/Category.hpp"
 
@@ -16,6 +17,7 @@ class SceneNode : public sf::Transformable, public sf::Drawable, private sf::Non
 
 public:
 	typedef std::unique_ptr<SceneNode> Ptr;
+	typedef std::pair<SceneNode*, SceneNode*> Pair;
 	
 public:
 	explicit SceneNode(Category::Type category = Category::None);
@@ -28,23 +30,34 @@ public:
 	sf::Vector2f getWorldPosition() const;
 
 	virtual unsigned int getCategory() const;
+	virtual bool isDestroyed() const;
+	virtual bool isMarkedForRemoval() const;
 
 	void onCommand(const Command& command, sf::Time dt);
+
+	virtual sf::FloatRect getBoundingRect() const;
+	void checkNodeCollision(SceneNode& node, std::set<Pair>& collisionPairs);
+	void checkSceneCollision(SceneNode& sceneGraph, std::set<Pair>& collisionPairs);
+	void removeWrecks();
 
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
 	void drawChildren(sf::RenderTarget& target, sf::RenderStates states) const;
+	void drawBoundingRect(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	virtual void updateCurrent(sf::Time dt, CommandQueue& commands);
 	void updateChildren(sf::Time dt, CommandQueue& commands);
 
-private:
+protected:
 	std::vector<Ptr> mChildren;
 	SceneNode* mParent;
 	Category::Type mDefaultCategory;
 };
 
 float distance(const SceneNode& lhs, const SceneNode& rhs);
+bool collision(const SceneNode& lhs, const SceneNode& rhs);
+
+bool matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2);
 
 #endif

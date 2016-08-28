@@ -30,6 +30,7 @@ public:
 	void draw();
 
 	CommandQueue& getCommandQueue();
+	bool gameStatus() const;
 
 private:
 	void loadTextures();
@@ -41,8 +42,11 @@ private:
 
 	sf::FloatRect getViewBounds() const;
 	sf::FloatRect getBattlefieldBounds() const;
+	void destroyEntitiesOutsideView();
 
 	void guideMissiles();
+
+	void handleCollisions();
 
 private:
 	enum Layer{
@@ -68,6 +72,8 @@ private:
 	
 	std::vector<SpawnPoint> mEnemySpointPoints;
 	std::vector<Aircraft*> mActiveEnemies;
+
+	bool gameOver;
 	
 };
 
