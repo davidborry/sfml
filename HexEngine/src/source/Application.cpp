@@ -6,6 +6,7 @@
 #include "../headers/states/GameState.hpp"
 #include "../headers/states/PauseState.hpp"
 #include "../headers/states/SettingsState.hpp"
+#include "../headers/states/GameOverState.hpp"
 
 #include "../headers/util/Utility.hpp"
 
@@ -109,4 +110,5 @@ void Application::registerStates(){
 	mStateStack.registerState<GameState>(States::Game);
 	mStateStack.registerState<PauseState>(States::Pause);
 	mStateStack.registerState<SettingsState>(States::Settings);
+	mStateStack.registerState<GameOverState>(States::GameOver);
 }

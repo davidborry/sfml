@@ -9,7 +9,8 @@ namespace States{
 		Loading,
 		Game,
 		Pause,
-		Settings
+		Settings,
+		GameOver
 	};
 }
 

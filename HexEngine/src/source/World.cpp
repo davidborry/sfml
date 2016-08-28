@@ -91,35 +91,21 @@ void World::update(sf::Time dt){
 	mWorldView.move(0.f, mScrollSpeed*dt.asSeconds());
 	mPlayerAircraft->setVelocity(0.f, 0.f);
 	
-	spawnEnemies();
+	destroyEntitiesOutsideView();
+	guideMissiles();
 
 	//forward commands to the scene graph
 	while (!mCommandQueue.isEmpty())
 		mSceneGraph.onCommand(mCommandQueue.pop(), dt);
-
-	guideMissiles();
-
-	sf::Vector2f velocity = mPlayerAircraft->getVelocity();
-	if (velocity.x != 0 && velocity.y != 0)
-		mPlayerAircraft->setVelocity(velocity/std::sqrt(2.f));
-
-	mSceneGraph.update(dt, mCommandQueue);
-
-	sf::FloatRect viewBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize());
-	const float borderDistance = 40.f;
-	
-	sf::Vector2f position = mPlayerAircraft->getPosition();
-	position.x = std::max(position.x, viewBounds.left + borderDistance);
-	position.x = std::min(position.x, viewBounds.left + viewBounds.width - borderDistance);
-	position.y = std::max(position.y, viewBounds.top + borderDistance);
-	position.y = std::min(position.y, viewBounds.top + viewBounds.height - borderDistance);
-
-	mPlayerAircraft->setPosition(position);
+	adaptPlayerVelocity();
 
 	handleCollisions();	
-
-	destroyEntitiesOutsideView();
 	mSceneGraph.removeWrecks();
+	spawnEnemies();
+
+	mSceneGraph.update(dt, mCommandQueue);
+	adaptPlayerPosition();
+
 
 }
 
@@ -276,4 +262,31 @@ void World::destroyEntitiesOutsideView(){
 
 bool World::gameStatus() const{
 	return gameOver;
+}
+
+void World::adaptPlayerVelocity(){
+	sf::Vector2f velocity = mPlayerAircraft->getVelocity();
+	if (velocity.x != 0 && velocity.y != 0)
+		mPlayerAircraft->setVelocity(velocity / std::sqrt(2.f));
+}
+
+void World::adaptPlayerPosition(){
+	sf::FloatRect viewBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize());
+	const float borderDistance = 40.f;
+
+	sf::Vector2f position = mPlayerAircraft->getPosition();
+	position.x = std::max(position.x, viewBounds.left + borderDistance);
+	position.x = std::min(position.x, viewBounds.left + viewBounds.width - borderDistance);
+	position.y = std::max(position.y, viewBounds.top + borderDistance);
+	position.y = std::min(position.y, viewBounds.top + viewBounds.height - borderDistance);
+
+	mPlayerAircraft->setPosition(position);
+}
+
+bool World::hasActivePlayer() const {
+	return !mPlayerAircraft->isDestroyed();
+}
+
+bool World::hasPlayerReachedEnd() const{
+	return !mWorldBounds.contains(mPlayerAircraft->getPosition());
 }

@@ -32,6 +32,9 @@ public:
 	CommandQueue& getCommandQueue();
 	bool gameStatus() const;
 
+	bool hasActivePlayer() const;
+	bool hasPlayerReachedEnd() const;
+
 private:
 	void loadTextures();
 	void buildScene();
@@ -39,6 +42,9 @@ private:
 	void spawnEnemies();
 	void addEnemy(Aircraft::Type type, float x, float y);
 	void addEnemies();
+
+	void adaptPlayerVelocity();
+	void adaptPlayerPosition();
 
 	sf::FloatRect getViewBounds() const;
 	sf::FloatRect getBattlefieldBounds() const;

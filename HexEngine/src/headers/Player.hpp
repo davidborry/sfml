@@ -23,6 +23,12 @@ public:
 		ActionCount
 	};
 
+	enum MissionStatus{
+		MissionRunning,
+		MissionSuccess,
+		MissionFailure
+	};
+
 	void handleEvents(const sf::Event& event, CommandQueue& commands);
 	void handleRealTimeInputs(CommandQueue& commands);
 
@@ -31,6 +37,9 @@ public:
 
 	void endGame();
 	void startGame();
+
+	unsigned int getMissionStatus() const;
+	void setMissionStatus(MissionStatus status);
 
 private:
 	void initializeActions();
@@ -41,6 +50,7 @@ private:
 	std::map<Action, Command> mActionBinding;
 
 	bool gameOver;
+	MissionStatus mCurrentMissionStatus;
 	
 };
 

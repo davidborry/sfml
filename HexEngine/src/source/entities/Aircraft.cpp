@@ -147,7 +147,7 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands){
 	
 
 	if (mIsLaunchingMissile){
-		printf("test\n");
+		//printf("test\n");
 		commands.push(mMissileCommand);
 		mIsLaunchingMissile = false;
 		mMissiles--;

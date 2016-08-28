@@ -2,7 +2,8 @@
 #include <iostream>
 
 Player::Player():
-gameOver(false)
+gameOver(false),
+mCurrentMissionStatus(MissionRunning)
 {
 	mKeyBinding[sf::Keyboard::Q] = Action::MoveLeft;
 	mKeyBinding[sf::Keyboard::D] = Action::MoveRight;
@@ -115,4 +116,12 @@ void Player::endGame(){
 
 void Player::startGame(){
 	gameOver = false;
+}
+
+unsigned int Player::getMissionStatus() const {
+	return mCurrentMissionStatus;
+}
+
+void  Player::setMissionStatus(Player::MissionStatus status){
+	mCurrentMissionStatus = status;
 }

@@ -8,6 +8,7 @@ mWorld(*context.window,*context.fonts),
 mPlayer(*context.player)
 {
 	mPlayer.startGame();
+	mPlayer.setMissionStatus(Player::MissionRunning);
 }
 
 void GameState::draw(){
@@ -17,10 +18,22 @@ void GameState::draw(){
 bool GameState::update(sf::Time dt){
 	//printf("%i\n", mParam);
 
-	mWorld.update(dt);
-	if (mWorld.gameStatus())
-		mPlayer.endGame();
+	
+	/*if (mWorld.gameStatus())
+		mPlayer.endGame();*/
 
+	if (!mWorld.hasActivePlayer()){
+		printf("MORT");
+		mPlayer.setMissionStatus(Player::MissionFailure);
+		requestStackPush(States::GameOver);
+	}
+
+	else if (mWorld.hasPlayerReachedEnd()){
+		mPlayer.setMissionStatus(Player::MissionSuccess);
+		requestStackPush(States::GameOver);
+	}
+
+	mWorld.update(dt);
 	CommandQueue& commands = mWorld.getCommandQueue();
 	mPlayer.handleRealTimeInputs(commands);
 
