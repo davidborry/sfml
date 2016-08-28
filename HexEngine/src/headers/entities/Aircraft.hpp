@@ -26,6 +26,9 @@ public:
 
 	void fire();
 	void launchMissile();
+	void increaseFireRate();
+	void CollectMissiles(int m);
+	void increaseFireSpread();
 
 	bool isAllied() const;
 
@@ -51,6 +54,7 @@ private:
 	sf::Time mFireCountdown;
 	int mFireRateLevel;
 	int mSpreadLevel;
+	int mMissiles;
 
 	Command mFireCommand;
 	Command mMissileCommand;

@@ -9,7 +9,8 @@ namespace Category{
 		AlliedAircraft = 1 << 2,
 		EnemyAircraft = 1 << 3,
 		EnemyProjectile = 1 << 4,
-		AlliedProjectile = 1 << 5
+		AlliedProjectile = 1 << 5,
+		Pickup = 1 << 6
 	};
 }
 

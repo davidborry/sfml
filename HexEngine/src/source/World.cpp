@@ -35,6 +35,8 @@ void World::loadTextures(){
 
 	mTextures.load(Resources::Textures::Bullet, "Resources/img/Bullet.png");
 	mTextures.load(Resources::Textures::Missile, "Resources/img/Missile.png");
+
+	mTextures.load(Resources::Textures::HealthRefill, "Resources/img/HealthRefill.png");
 }
 
 void World::buildScene(){
@@ -65,6 +67,9 @@ void World::buildScene(){
 	mPlayerAircraft->setVelocity(40.f, mScrollSpeed);
 	mSceneLayers[Air]->attachChild(std::move(leader));
 
+	std::unique_ptr<Pickup> health(new Pickup(Pickup::HealthRefill, mTextures));
+	health->setPosition(mSpawnPosition);
+	mSceneLayers[Air]->attachChild(std::move(health));
 	/**std::unique_ptr<Aircraft> leftEscort(new Aircraft(Aircraft::RAPTOR, mTextures, mFonts));
 	leftEscort->setPosition(-80.f, 50.f);
 	mPlayerAircraft->attachChild(std::move(leftEscort));
@@ -101,7 +106,7 @@ void World::update(sf::Time dt){
 
 	sf::FloatRect viewBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize());
 	const float borderDistance = 40.f;
-
+	
 	sf::Vector2f position = mPlayerAircraft->getPosition();
 	position.x = std::max(position.x, viewBounds.left + borderDistance);
 	position.x = std::min(position.x, viewBounds.left + viewBounds.width - borderDistance);
@@ -131,7 +136,7 @@ void World::spawnEnemies(){
 	while (!mEnemySpointPoints.empty() && mEnemySpointPoints.back().y > getViewBounds().top){
 
 		SpawnPoint spawn = mEnemySpointPoints.back();
-
+		
 		std::unique_ptr<Aircraft> ennemy(new Aircraft(spawn.type, mTextures, mFonts));
 		ennemy->setPosition(spawn.x, spawn.y);
 		ennemy->setRotation(180.f);
@@ -194,8 +199,9 @@ void World::guideMissiles(){
 
 			}
 
-			if (closestEnemy)
+			if (closestEnemy){
 				missile.guideTowards(closestEnemy->getWorldPosition());
+			}
 		});
 
 	mCommandQueue.push(enemyCollector);

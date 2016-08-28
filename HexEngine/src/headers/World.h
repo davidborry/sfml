@@ -9,6 +9,7 @@
 #include "entities\Aircraft.hpp"
 #include "commands\CommandQueue.hpp"
 #include "util\Foreach.hpp"
+#include "entities\Pickup.hpp"
 #include <array>
 
 

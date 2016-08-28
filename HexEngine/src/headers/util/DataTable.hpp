@@ -3,6 +3,7 @@
 
 #include "ResourceIdentifier.hpp"
 #include <vector>
+#include <functional>
 
 class Aircraft;
 
@@ -27,7 +28,13 @@ struct ProjectileData{
 	Resources::Textures::ID texture;
 };
 
+struct PickupData{
+	std::function<void(Aircraft&)> action;
+	Resources::Textures::ID texture;
+};
+
 std::vector<AircraftData> initializeAircraftData();
 std::vector<ProjectileData> initializeProjectileData();
+std::vector<PickupData> initializePickUpData();
 
 #endif

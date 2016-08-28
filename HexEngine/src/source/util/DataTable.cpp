@@ -1,6 +1,7 @@
 #include "../../headers/util/DataTable.hpp"
 #include "../../headers/entities/Aircraft.hpp"
 #include "../../headers/entities/Projectile.hpp"
+#include "../../headers/entities/Pickup.hpp"
 
 Direction::Direction(float angle, float distance) : angle(angle), distance(distance)
 {
@@ -51,6 +52,24 @@ std::vector<ProjectileData> initializeProjectileData(){
 	data[Projectile::Missile].damage = 200;
 	data[Projectile::Missile].speed = 150.f;
 	data[Projectile::Missile].texture = Resources::Textures::Missile;
+
+	return data;
+}
+
+std::vector<PickupData> initializePickUpData(){
+	std::vector<PickupData> data(Pickup::TypeCount);
+
+	data[Pickup::HealthRefill].action = [](Aircraft& a) {a.repair(25); };
+	data[Pickup::HealthRefill].texture = Resources::Textures::HealthRefill;
+
+	data[Pickup::FireRate].action = std::bind(&Aircraft::increaseFireRate, std::placeholders::_1);
+	data[Pickup::FireRate].texture = Resources::Textures::FireRate;
+
+	data[Pickup::FireSpread].action = std::bind(&Aircraft::increaseFireSpread, std::placeholders::_1);
+	data[Pickup::FireSpread].texture = Resources::Textures::FireSpread;
+
+	data[Pickup::MissileRefill].action = std::bind(&Aircraft::CollectMissiles, std::placeholders::_1,3);
+	data[Pickup::MissileRefill].texture = Resources::Textures::MissileRefill;
 
 	return data;
 }

@@ -31,7 +31,8 @@ mIsLaunchingMissile(false),
 mFireRateLevel(1),
 mFireCommand(),
 mMissileCommand(),
-mSpreadLevel(1)
+mSpreadLevel(1),
+mMissiles(3)
 
 
 {
@@ -116,7 +117,8 @@ void Aircraft::fire(){
 }
 
 void Aircraft::launchMissile(){
-	mIsLaunchingMissile = true;
+	if (mMissiles > 0)
+		mIsLaunchingMissile = true;
 }
 
 void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands){
@@ -140,6 +142,7 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands){
 		printf("test\n");
 		commands.push(mMissileCommand);
 		mIsLaunchingMissile = false;
+		mMissiles--;
 	}
 }
 
@@ -181,4 +184,17 @@ void Aircraft::createProjectile(SceneNode& node, Projectile::Type type, float xO
 
 bool Aircraft::isAllied() const{
 	return mType == EAGLE;
+}
+
+void Aircraft::increaseFireRate(){
+	mFireRateLevel++;
+}
+
+void Aircraft::increaseFireSpread(){
+	if (mSpreadLevel < 3)
+		mSpreadLevel++;
+}
+
+void Aircraft::CollectMissiles(int m){
+	mMissiles += m;
 }
