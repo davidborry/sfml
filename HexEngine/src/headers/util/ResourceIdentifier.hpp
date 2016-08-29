@@ -13,20 +13,14 @@ namespace Resources{
 	{
 		enum ID
 		{
-			Eagle,
-			Raptor,
+			Entities,
+			Jungle,
+			Buttons,
 			Desert,
-			Avenger,
-			Bullet,
-			Missile,
-			FireRate,
-			HealthRefill,
-			MissileRefill,
-			FireSpread,
 			TitleScreen,
-			ButtonNormal,
-			ButtonPressed,
-			ButtonSelected
+			Explosion,
+			Particle,
+			FinishLine
 		};
 
 	}

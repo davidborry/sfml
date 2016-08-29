@@ -27,11 +27,7 @@ mStatisticsNumFrames(0)
 	
 	mFonts.load(Resources::Fonts::Main, "Resources/font/Sansation.ttf");
 	mTextures.load(Resources::Textures::TitleScreen, "Resources/img/TitleScreen.png");
-
-	mTextures.load(Resources::Textures::ButtonNormal, "Resources/img/ButtonNormal.png");
-	mTextures.load(Resources::Textures::ButtonPressed, "Resources/img/ButtonPressed.png");
-	mTextures.load(Resources::Textures::ButtonSelected, "Resources/img/ButtonSelected.png");
-
+	mTextures.load(Resources::Textures::Buttons, "Resources/img/Buttons.png");
 
 	mStatisticsText.setFont(mFonts.get(Resources::Fonts::Main));
 	mStatisticsText.setPosition(5.f, 5.f);

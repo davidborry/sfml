@@ -157,18 +157,17 @@ bool SceneNode::isMarkedForRemoval() const {
 
 void SceneNode::removeWrecks(){
 
-	
-
+	//First remove wrecks from the total nodes vector
 	auto wreckfieldBegin1 = std::remove_if(mNodes.begin(), mNodes.end(),
 		std::mem_fn(&SceneNode::isMarkedForRemoval));
 
 	mNodes.erase(wreckfieldBegin1, mNodes.end());
 
-	auto wreckfieldBegin = std::remove_if(mChildren.begin(), mChildren.end(),
+	//Then clear the SceneNode::Ptr vector
+	auto wreckfieldBegin2 = std::remove_if(mChildren.begin(), mChildren.end(),
 		std::mem_fn(&SceneNode::isMarkedForRemoval));
 
-
-	mChildren.erase(wreckfieldBegin, mChildren.end());
+	mChildren.erase(wreckfieldBegin2, mChildren.end());
 	
 	std::for_each(mChildren.begin(), mChildren.end(),
 		std::mem_fn(&SceneNode::removeWrecks));

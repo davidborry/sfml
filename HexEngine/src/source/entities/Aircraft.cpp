@@ -5,13 +5,13 @@
 Resources::Textures::ID toTextureID(Aircraft::Type id){
 	switch (id){
 	case Aircraft::Type::EAGLE:
-		return Resources::Textures::Eagle;
+		return Resources::Textures::Entities;
 
 	case Aircraft::Type::RAPTOR:
-		return Resources::Textures::Raptor;
+		return Resources::Textures::Entities;
 
 	case Aircraft::Type::AVENGER:
-		return Resources::Textures::Avenger;
+		return Resources::Textures::Entities;
 	}
 }
 
@@ -22,7 +22,7 @@ namespace{
 Aircraft::Aircraft(Type type, const TextureHolder& textures, const FontHolder& fonts): 
 Entity(Table[type].hitpoints),
 mType(type),
-mSprite(textures.get(toTextureID(type))),
+mSprite(textures.get(toTextureID(type)),Table[mType].textureRect),
 mDirectionIndex(0),
 mTravelledDistance(0.f),
 mFireCountdown(sf::Time::Zero),

@@ -28,16 +28,10 @@ gameOver(false)
 }
 
 void World::loadTextures(){
+
+	mTextures.load(Resources::Textures::Entities, "Resources/img/Entities.png");
 	mTextures.load(Resources::Textures::Desert, "Resources/img/sand.jpg");
 
-	mTextures.load(Resources::Textures::Eagle, "Resources/img/plane.png");
-	mTextures.load(Resources::Textures::Raptor, "Resources/img/drone.png");
-	mTextures.load(Resources::Textures::Avenger, "Resources/img/Avenger.png");
-
-	mTextures.load(Resources::Textures::Bullet, "Resources/img/Bullet.png");
-	mTextures.load(Resources::Textures::Missile, "Resources/img/Missile.png");
-
-	mTextures.load(Resources::Textures::HealthRefill, "Resources/img/HealthRefill.png");
 }
 
 void World::buildScene(){
@@ -71,7 +65,7 @@ void World::buildScene(){
 	mSceneLayers[Air]->attachChild(std::move(leader));
 
 	std::unique_ptr<Pickup> health(new Pickup(Pickup::HealthRefill, mTextures));
-	health->setPosition(mSpawnPosition - sf::Vector2f(0.f,50.f));
+	health->setPosition(mSpawnPosition - sf::Vector2f(0.f,200.f));
 	mSceneLayers[Air]->attachChild(std::move(health));
 	/**std::unique_ptr<Aircraft> leftEscort(new Aircraft(Aircraft::RAPTOR, mTextures, mFonts));
 	leftEscort->setPosition(-80.f, 50.f);
@@ -90,7 +84,7 @@ void World::draw(){
 }
 
 void World::update(sf::Time dt){
-	printf("%i\n", mSceneGraph.getNodes().size());
+	//printf("%i\n", mSceneGraph.getNodes().size());
 
 	/*for (int i = 0; i < mSceneGraph.getNodes().size(); i++){
 		SceneNode* n = mSceneGraph.getNode(i);
