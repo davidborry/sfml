@@ -52,6 +52,8 @@ void World::buildScene(){
 		mSceneGraph.attachChild(std::move(layer));
 	}
 
+
+	//printf("%i\n", mSceneGraph.nbChildren());
 	//Initialize desert sprite node
 	sf::Texture& texture = mTextures.get(Resources::Textures::Desert);
 	sf::IntRect textureRect(mWorldBounds);
@@ -88,6 +90,24 @@ void World::draw(){
 }
 
 void World::update(sf::Time dt){
+	/*
+	Graph nodes test
+
+	mSceneGraph.findNodes();
+	printf("%i\n", mSceneGraph.getNodes().size());
+
+	for (int i = 0; i < mSceneGraph.getNodes().size(); i++){
+		SceneNode* n = mSceneGraph.getNode(i);
+		if (n->getCategory() & Category::PlayerAircraft){
+			auto p = static_cast<Aircraft*>(n);
+			p->damage(5);
+		}
+			
+	}
+	
+
+	mSceneGraph.clearNodes();*/
+
 	mWorldView.move(0.f, mScrollSpeed*dt.asSeconds());
 	mPlayerAircraft->setVelocity(0.f, 0.f);
 	
@@ -101,6 +121,7 @@ void World::update(sf::Time dt){
 
 	handleCollisions();	
 	mSceneGraph.removeWrecks();
+	//mSceneGraph.clearNodes();
 	spawnEnemies();
 
 	mSceneGraph.update(dt, mCommandQueue);

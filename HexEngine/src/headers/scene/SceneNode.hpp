@@ -40,6 +40,15 @@ public:
 	void checkSceneCollision(SceneNode& sceneGraph, std::set<Pair>& collisionPairs);
 	void removeWrecks();
 
+	SceneNode* getRoot();
+	int nbChildren() const;
+	std::vector<SceneNode*> getNodes();
+	void findNodes();
+	void addNode(SceneNode* node);
+
+	void clearNodes();
+	SceneNode* getNode(int i);
+
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -51,6 +60,8 @@ private:
 
 protected:
 	std::vector<Ptr> mChildren;
+	std::vector<SceneNode*> mNodes;
+
 	SceneNode* mParent;
 	Category::Type mDefaultCategory;
 };

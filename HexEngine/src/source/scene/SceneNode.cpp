@@ -25,6 +25,7 @@ SceneNode::Ptr SceneNode::detachChild(const SceneNode& node){
 
 	Ptr result = std::move(*found);
 	result->mParent = nullptr;
+
 	mChildren.erase(found);
 
 	return result;
@@ -154,10 +155,49 @@ bool SceneNode::isMarkedForRemoval() const {
 }
 
 void SceneNode::removeWrecks(){
+
+
 	auto wreckfieldBegin = std::remove_if(mChildren.begin(), mChildren.end(),
 		std::mem_fn(&SceneNode::isMarkedForRemoval));
-	mChildren.erase(wreckfieldBegin, mChildren.end());
 
+	mChildren.erase(wreckfieldBegin, mChildren.end());
+	
 	std::for_each(mChildren.begin(), mChildren.end(),
 		std::mem_fn(&SceneNode::removeWrecks));
+}
+
+SceneNode* SceneNode::getRoot(){
+	SceneNode* node = this;
+	while (node->mParent != nullptr)
+		node = node->mParent;
+
+	return node;
+}
+
+int SceneNode::nbChildren() const{
+	return mChildren.size();
+}
+
+std::vector<SceneNode*> SceneNode::getNodes(){
+	return mNodes;
+}
+
+void SceneNode::findNodes(){
+	getRoot()->addNode(this);
+
+	FOREACH(Ptr& node, mChildren){
+		node->findNodes();
+	}
+}
+
+void SceneNode::addNode(SceneNode* node){
+	mNodes.push_back(node);
+}
+
+void SceneNode::clearNodes(){
+	mNodes.clear();
+}
+
+SceneNode* SceneNode::getNode(int i){
+	return mNodes[i];
 }
