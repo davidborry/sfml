@@ -90,23 +90,18 @@ void World::draw(){
 }
 
 void World::update(sf::Time dt){
-	/*
-	Graph nodes test
-
-	mSceneGraph.findNodes();
 	printf("%i\n", mSceneGraph.getNodes().size());
 
-	for (int i = 0; i < mSceneGraph.getNodes().size(); i++){
+	/*for (int i = 0; i < mSceneGraph.getNodes().size(); i++){
 		SceneNode* n = mSceneGraph.getNode(i);
 		if (n->getCategory() & Category::PlayerAircraft){
 			auto p = static_cast<Aircraft*>(n);
-			p->damage(5);
+			p->move(0.2f,0.f);
 		}
 			
 	}
-	
+	*/
 
-	mSceneGraph.clearNodes();*/
 
 	mWorldView.move(0.f, mScrollSpeed*dt.asSeconds());
 	mPlayerAircraft->setVelocity(0.f, 0.f);

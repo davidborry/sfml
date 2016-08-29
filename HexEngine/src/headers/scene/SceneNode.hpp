@@ -43,10 +43,8 @@ public:
 	SceneNode* getRoot();
 	int nbChildren() const;
 	std::vector<SceneNode*> getNodes();
-	void findNodes();
 	void addNode(SceneNode* node);
 
-	void clearNodes();
 	SceneNode* getNode(int i);
 
 private:
