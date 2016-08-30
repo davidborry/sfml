@@ -6,6 +6,7 @@ namespace sf
 {
 	class Texture;
 	class Font;
+	class Shader;
 }
 
 namespace Resources{
@@ -16,7 +17,6 @@ namespace Resources{
 			Entities,
 			Jungle,
 			Buttons,
-			Desert,
 			TitleScreen,
 			Explosion,
 			Particle,
@@ -33,6 +33,15 @@ namespace Resources{
 		};
 
 	}
+
+	namespace Shaders{
+		enum ID{
+			BrightnessPass,
+			DownSamplePass,
+			GaussianBlurPass,
+			AddPass
+		};
+	}
 }
 
 // Forward declaration and a few type definitions
@@ -41,5 +50,6 @@ class ResourceHolder;
 
 typedef ResourceHolder<sf::Texture, Resources::Textures::ID> TextureHolder;
 typedef ResourceHolder<sf::Font, Resources::Fonts::ID> FontHolder;
+typedef ResourceHolder<sf::Shader, Resources::Shaders::ID> ShaderHolder;
 
 #endif // BOOK_RESOURCEID

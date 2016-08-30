@@ -8,17 +8,20 @@ y(y)
 
 }
 
-World::World(sf::RenderWindow& window, FontHolder& fonts) : mWindow(window),
+World::World(sf::RenderTarget& outputTarget, FontHolder& fonts) : 
+mTarget(outputTarget),
 mFonts(fonts),
-mWorldView(window.getDefaultView()),
-mWorldBounds(0.f, 0.f, mWorldView.getSize().x, 2000.f),
-mSpawnPosition(mWorldView.getSize().x/2, mWorldBounds.height - mWorldView.getSize().y),
+mWorldView(outputTarget.getDefaultView()),
+mWorldBounds(0.f, 0.f, mWorldView.getSize().x, 5000.f),
+mSpawnPosition(mWorldView.getSize().x/2.f, mWorldBounds.height - mWorldView.getSize().y /2.f),
 mScrollSpeed(-50.f),
 mPlayerAircraft(nullptr),
 mEnemySpointPoints(),
 mActiveEnemies(),
 gameOver(false)
 {
+	mSceneTexture.create(outputTarget.getSize().x, outputTarget.getSize().y);
+
 	loadTextures();
 	buildScene();
 
@@ -30,9 +33,10 @@ gameOver(false)
 void World::loadTextures(){
 
 	mTextures.load(Resources::Textures::Entities, "Resources/img/Entities.png");
-	mTextures.load(Resources::Textures::Desert, "Resources/img/sand.jpg");
+	mTextures.load(Resources::Textures::Jungle, "Resources/img/Jungle.png");
 	mTextures.load(Resources::Textures::Particle, "Resources/img/Particle.png");
 	mTextures.load(Resources::Textures::Explosion, "Resources/img/Explosion.png");
+	mTextures.load(Resources::Textures::FinishLine, "Resources/img/FinishLine.png");
 
 }
 
@@ -51,13 +55,18 @@ void World::buildScene(){
 
 	//printf("%i\n", mSceneGraph.nbChildren());
 	//Initialize desert sprite node
-	sf::Texture& texture = mTextures.get(Resources::Textures::Desert);
+	sf::Texture& texture = mTextures.get(Resources::Textures::Jungle);
 	sf::IntRect textureRect(mWorldBounds);
 	texture.setRepeated(true);
 
 	std::unique_ptr<SpriteNode> backgroundSprite(new SpriteNode(texture, textureRect));
 	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top);
 	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
+
+	sf::Texture& finishTexture = mTextures.get(Resources::Textures::FinishLine);
+	std::unique_ptr<SpriteNode> finishSprite(new SpriteNode(finishTexture));
+	finishSprite->setPosition(0.f, -76.f);
+	mSceneLayers[Background]->attachChild(std::move(finishSprite));
 
 	//Initialize planes
 	std::unique_ptr<Aircraft> leader(new Aircraft(Aircraft::EAGLE, mTextures, mFonts));
@@ -75,6 +84,7 @@ void World::buildScene(){
 
 	std::unique_ptr<ParticleNode> propellantNode(new ParticleNode(Particle::Propellant, mTextures));
 	mSceneLayers[LowerAir]->attachChild(std::move(propellantNode));
+
 	/**std::unique_ptr<Aircraft> leftEscort(new Aircraft(Aircraft::RAPTOR, mTextures, mFonts));
 	leftEscort->setPosition(-80.f, 50.f);
 	mPlayerAircraft->attachChild(std::move(leftEscort));
@@ -87,8 +97,21 @@ void World::buildScene(){
 }
 
 void World::draw(){
-	mWindow.setView(mWorldView);
-	mWindow.draw(mSceneGraph);
+
+	if (PostEffect::isSupported()){
+
+		mSceneTexture.clear();
+		mSceneTexture.setView(mWorldView);
+		mSceneTexture.draw(mSceneGraph);
+		mSceneTexture.display();
+		mBloomEffect.apply(mSceneTexture, mTarget);
+
+	}
+
+	else{
+		mTarget.setView(mWorldView);
+		mTarget.draw(mSceneGraph);
+	}
 }
 
 void World::update(sf::Time dt){

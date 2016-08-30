@@ -11,6 +11,7 @@
 #include "util\Foreach.hpp"
 #include "entities\Pickup.hpp"
 #include "scene\ParticleNode.hpp"
+#include "graphics\BloomEffect.hpp"
 #include <array>
 
 
@@ -26,7 +27,7 @@ public:
 	};
 
 public:
-	explicit World(sf::RenderWindow& window, FontHolder& fonts);
+	explicit World(sf::RenderTarget& outputTarget, FontHolder& fonts);
 	void update(sf::Time dt);
 	void draw();
 
@@ -64,12 +65,14 @@ private:
 	};
 
 private:
-	sf::RenderWindow& mWindow;
 	sf::View mWorldView;
 	TextureHolder mTextures;
 	FontHolder& mFonts;
 	SceneNode mSceneGraph;
 	std::array<SceneNode*, LayerCount> mSceneLayers;
+	sf::RenderTarget& mTarget;
+	sf::RenderTexture mSceneTexture;
+	BloomEffect mBloomEffect;
 
 	sf::FloatRect mWorldBounds;
 	sf::Vector2f mSpawnPosition;
