@@ -32,6 +32,7 @@ void World::loadTextures(){
 	mTextures.load(Resources::Textures::Entities, "Resources/img/Entities.png");
 	mTextures.load(Resources::Textures::Desert, "Resources/img/sand.jpg");
 	mTextures.load(Resources::Textures::Particle, "Resources/img/Particle.png");
+	mTextures.load(Resources::Textures::Explosion, "Resources/img/Explosion.png");
 
 }
 
@@ -91,7 +92,7 @@ void World::draw(){
 }
 
 void World::update(sf::Time dt){
-	//printf("%i\n", mSceneGraph.getNodes().size());
+	printf("%i\n", mSceneGraph.getNodes().size());
 
 	/*for (int i = 0; i < mSceneGraph.getNodes().size(); i++){
 		SceneNode* n = mSceneGraph.getNode(i);
@@ -271,7 +272,7 @@ void World::destroyEntitiesOutsideView(){
 	command.category = Category::Projectile | Category::EnemyAircraft;
 	command.action = derivedAction<Entity>([this](Entity& e, sf::Time){
 		if (!getBattlefieldBounds().intersects(e.getBoundingRect()))
-			e.destroy();
+			e.remove();
 	});
 
 	mCommandQueue.push(command);

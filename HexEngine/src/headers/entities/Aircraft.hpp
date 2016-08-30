@@ -6,6 +6,7 @@
 #include "../scene/TextNode.hpp"
 #include "../commands/Command.hpp"
 #include "Projectile.hpp"
+#include "../graphics/Animation.hpp"
 
 class Aircraft : public Entity{
 public:
@@ -35,6 +36,7 @@ public:
 	bool isAllied() const;
 	virtual bool isMarkedForRemoval() const;
 	virtual void destroy();
+	virtual void remove();
 
 private:
 	virtual void updateCurrent(sf::Time dt, CommandQueue& commands);
@@ -42,6 +44,11 @@ private:
 	void checkProjectileLaunch(sf::Time dt, CommandQueue& commands);
 	void createBullets(SceneNode& node, const TextureHolder& textures) const;
 	void createProjectile(SceneNode& node, Projectile::Type type, float xOffset, float yOffset, const TextureHolder& textures) const;
+
+	void updateRollAnmation();
+
+	Animation mExplosion;
+	bool mShowExplosion;
 
 private:
 	Type mType;

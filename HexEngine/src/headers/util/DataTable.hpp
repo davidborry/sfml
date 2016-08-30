@@ -21,6 +21,7 @@ struct AircraftData{
 	Resources::Textures::ID texture;
 	sf::IntRect textureRect;
 	std::vector<Direction> directions;
+	bool hasRollAnimation;
 };
 
 struct ProjectileData{

@@ -16,11 +16,13 @@ std::vector<AircraftData> initializeAircraftData(){
 	data[Aircraft::EAGLE].speed = 200.f;
 	data[Aircraft::EAGLE].texture = Resources::Textures::Entities;
 	data[Aircraft::EAGLE].textureRect = sf::IntRect(0, 0, 48, 64);
+	data[Aircraft::EAGLE].hasRollAnimation = true;
 
 	data[Aircraft::RAPTOR].hitpoints = 20;
 	data[Aircraft::RAPTOR].speed = 80;
 	data[Aircraft::RAPTOR].texture = Resources::Textures::Entities;
 	data[Aircraft::RAPTOR].textureRect = sf::IntRect(144, 0, 84, 64);
+	data[Aircraft::RAPTOR].hasRollAnimation = false;
 
 	data[Aircraft::RAPTOR].directions.push_back(Direction(+45, 80));
 	data[Aircraft::RAPTOR].directions.push_back(Direction(-45, 160));
@@ -29,6 +31,8 @@ std::vector<AircraftData> initializeAircraftData(){
 	data[Aircraft::AVENGER].hitpoints = 40;
 	data[Aircraft::AVENGER].speed = 50.f;
 	data[Aircraft::AVENGER].texture = Resources::Textures::Entities;
+	data[Aircraft::AVENGER].textureRect = sf::IntRect(228, 0, 60, 59);
+	data[Aircraft::AVENGER].hasRollAnimation = false;
 
 	data[Aircraft::AVENGER].directions.push_back(Direction(+45, 50));
 	data[Aircraft::AVENGER].directions.push_back(Direction(0, 50));
@@ -36,7 +40,7 @@ std::vector<AircraftData> initializeAircraftData(){
 	data[Aircraft::AVENGER].directions.push_back(Direction(0, 50));
 	data[Aircraft::AVENGER].directions.push_back(Direction(+45, 50));
 
-	data[Aircraft::AVENGER].textureRect = sf::IntRect(228, 0, 60, 59);
+
 
 	return data;
 }

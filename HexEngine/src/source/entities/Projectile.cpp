@@ -21,6 +21,7 @@ mSprite(textures.get(Table[type].texture),Table[type].textureRect)
 		propellant->setPosition(0.f, getBoundingRect().height / 2.f);
 		attachChild(std::move(propellant));
 	}
+
 }
 
 void Projectile::updateCurrent(sf::Time dt, CommandQueue& commands){

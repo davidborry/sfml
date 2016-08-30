@@ -13,6 +13,7 @@ void SceneNode::attachChild(Ptr child){
 	//printf("node");
 	child->mParent = this;
 	getRoot()->addNode(child.get());
+	
 	mChildren.push_back(std::move(child));
 }
 

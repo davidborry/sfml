@@ -32,7 +32,9 @@ mFireRateLevel(1),
 mFireCommand(),
 mMissileCommand(),
 mSpreadLevel(1),
-mMissiles(3)
+mMissiles(3),
+mExplosion(textures.get(Resources::Textures::Explosion)),
+mShowExplosion(true)
 
 
 {
@@ -61,10 +63,15 @@ mMissiles(3)
 
 	mHitPoints = Table[mType].hitpoints;
 	// printf("%i\n", Table[mType].hitpoints);
+
+	mExplosion.setFrameSize(sf::Vector2i(256, 256));
+	mExplosion.setNumFrames(16);
+	mExplosion.setDuration(sf::seconds(1.f));
+
+	centerOrigin(mExplosion);
 }
 
 void Aircraft::updateCurrent(sf::Time dt, CommandQueue& commands){
-	Entity::updateCurrent(dt, commands);
 	mHealthDisplay->setString(toString(getHitPoints()) + " HP");
 	mHealthDisplay->setPosition(0.f, 50.f);
 	mHealthDisplay->setRotation(-getRotation());
@@ -75,12 +82,24 @@ void Aircraft::updateCurrent(sf::Time dt, CommandQueue& commands){
 		mMissilesDisplay->setRotation(-getRotation());
 	}
 
+	if (isDestroyed()){
+		mExplosion.update(dt);
+		return;
+	}
+
 	checkProjectileLaunch(dt, commands);
 	updateMovementPattern(dt);
+	updateRollAnmation();
+	Entity::updateCurrent(dt, commands);
 }
 
 void Aircraft::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const{
-	target.draw(mSprite, states);
+
+	if (isDestroyed() && mShowExplosion)
+		target.draw(mExplosion, states);
+
+	else
+		target.draw(mSprite, states);
 }
 
 unsigned int Aircraft::getCategory() const{
@@ -212,7 +231,10 @@ sf::FloatRect Aircraft::getBoundingRect() const{
 }
 
 bool Aircraft::isMarkedForRemoval() const {
-	return mIsMarkedForRemoval;
+	if (getCategory() != Category::PlayerAircraft)
+	return isDestroyed() && (mExplosion.isFinished() || !mShowExplosion);
+
+	else return mIsMarkedForRemoval;
 }
 
 void Aircraft::destroy() {
@@ -220,4 +242,25 @@ Entity::destroy();
 
 if (getCategory() != Category::PlayerAircraft)
 	mIsMarkedForRemoval = true;
+}
+
+void Aircraft::remove(){
+	Entity::remove();
+	mShowExplosion = false;
+}
+
+void Aircraft::updateRollAnmation(){
+	if (Table[mType].hasRollAnimation){
+		sf::IntRect textureRect = Table[mType].textureRect;
+
+		//Roll left: texture rect offset once
+		if (getVelocity().x < 0.f)
+			textureRect.left += textureRect.width;
+
+		//Roll right
+		else if (getVelocity().x > 0.f)
+			textureRect.left += 2 * textureRect.width;
+
+		mSprite.setTextureRect(textureRect);
+	}
 }
