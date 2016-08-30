@@ -1,4 +1,5 @@
 #include "../../headers/entities/Projectile.hpp"
+#include "../../headers/scene/EmitterNode.hpp"
 
 namespace{
 	const std::vector<ProjectileData> Table = initializeProjectileData();
@@ -10,6 +11,16 @@ mType(type),
 mSprite(textures.get(Table[type].texture),Table[type].textureRect)
 {
 	centerOrigin(mSprite);
+
+	if (isGuided()){
+		std::unique_ptr<EmitterNode> smoke(new EmitterNode(Particle::Smoke));
+		smoke->setPosition(0.f, getBoundingRect().height / 2.f);
+		attachChild(std::move(smoke));
+
+		std::unique_ptr<EmitterNode> propellant(new EmitterNode(Particle::Propellant));
+		propellant->setPosition(0.f, getBoundingRect().height / 2.f);
+		attachChild(std::move(propellant));
+	}
 }
 
 void Projectile::updateCurrent(sf::Time dt, CommandQueue& commands){

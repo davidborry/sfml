@@ -10,6 +10,7 @@
 #include "commands\CommandQueue.hpp"
 #include "util\Foreach.hpp"
 #include "entities\Pickup.hpp"
+#include "scene\ParticleNode.hpp"
 #include <array>
 
 
@@ -57,7 +58,8 @@ private:
 private:
 	enum Layer{
 		Background,
-		Air,
+		LowerAir,
+		UpperAir,
 		LayerCount
 	};
 

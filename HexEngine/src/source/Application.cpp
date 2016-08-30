@@ -92,6 +92,7 @@ void Application::updateStatistics(sf::Time dt){
 	mStatisticsNumFrames += 1;
 
 	if (mStatisticsUpdateTime >= sf::seconds(1.0f)){
+
 		mStatisticsText.setString("FPS " +toString(mStatisticsNumFrames));
 
 		mStatisticsUpdateTime -= sf::seconds(1.0f);

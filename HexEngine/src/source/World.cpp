@@ -31,6 +31,7 @@ void World::loadTextures(){
 
 	mTextures.load(Resources::Textures::Entities, "Resources/img/Entities.png");
 	mTextures.load(Resources::Textures::Desert, "Resources/img/sand.jpg");
+	mTextures.load(Resources::Textures::Particle, "Resources/img/Particle.png");
 
 }
 
@@ -39,7 +40,7 @@ void World::buildScene(){
 	//Initialize each layer
 	for (std::size_t i = 0; i < LayerCount; ++i){
 
-		Category::Type category = (i == Air) ? Category::SceneAirLayer : Category::None;
+		Category::Type category = (i == LowerAir) ? Category::SceneAirLayer : Category::None;
 
 		SceneNode::Ptr layer(new SceneNode(category));
 		mSceneLayers[i] = layer.get();
@@ -62,11 +63,17 @@ void World::buildScene(){
 	mPlayerAircraft = leader.get();
 	mPlayerAircraft->setPosition(mSpawnPosition);
 	mPlayerAircraft->setVelocity(40.f, mScrollSpeed);
-	mSceneLayers[Air]->attachChild(std::move(leader));
+	mSceneLayers[UpperAir]->attachChild(std::move(leader));
 
 	std::unique_ptr<Pickup> health(new Pickup(Pickup::HealthRefill, mTextures));
 	health->setPosition(mSpawnPosition - sf::Vector2f(0.f,200.f));
-	mSceneLayers[Air]->attachChild(std::move(health));
+	mSceneLayers[UpperAir]->attachChild(std::move(health));
+
+	std::unique_ptr<ParticleNode> smokeNode(new ParticleNode(Particle::Smoke, mTextures));
+	mSceneLayers[LowerAir]->attachChild(std::move(smokeNode));
+
+	std::unique_ptr<ParticleNode> propellantNode(new ParticleNode(Particle::Propellant, mTextures));
+	mSceneLayers[LowerAir]->attachChild(std::move(propellantNode));
 	/**std::unique_ptr<Aircraft> leftEscort(new Aircraft(Aircraft::RAPTOR, mTextures, mFonts));
 	leftEscort->setPosition(-80.f, 50.f);
 	mPlayerAircraft->attachChild(std::move(leftEscort));
@@ -144,7 +151,7 @@ void World::spawnEnemies(){
 		ennemy->setPosition(spawn.x, spawn.y);
 		ennemy->setRotation(180.f);
 
-		mSceneLayers[Air]->attachChild(std::move(ennemy));
+		mSceneLayers[UpperAir]->attachChild(std::move(ennemy));
 
 		mEnemySpointPoints.pop_back();
 	}

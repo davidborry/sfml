@@ -2,6 +2,7 @@
 #include "../../headers/entities/Aircraft.hpp"
 #include "../../headers/entities/Projectile.hpp"
 #include "../../headers/entities/Pickup.hpp"
+#include "../../headers/graphics/Particle.hpp"
 
 Direction::Direction(float angle, float distance) : angle(angle), distance(distance)
 {
@@ -80,6 +81,18 @@ std::vector<PickupData> initializePickUpData(){
 	data[Pickup::MissileRefill].action = std::bind(&Aircraft::CollectMissiles, std::placeholders::_1,3);
 	data[Pickup::MissileRefill].texture = Resources::Textures::Entities;
 	data[Pickup::MissileRefill].textureRect = sf::IntRect(40, 64, 40, 40);
+
+	return data;
+}
+
+std::vector<ParticleData> initializeParticleData(){
+	std::vector<ParticleData> data(Particle::TypeCount);
+
+	data[Particle::Propellant].color = sf::Color(255, 255, 50);
+	data[Particle::Propellant].timelife = sf::seconds(0.6f);
+
+	data[Particle::Smoke].color = sf::Color(50, 50, 50);
+	data[Particle::Smoke].timelife = sf::seconds(4.f);
 
 	return data;
 }
