@@ -115,7 +115,7 @@ void World::draw(){
 }
 
 void World::update(sf::Time dt){
-	printf("%i\n", mSceneGraph.getNodes().size());
+	//printf("%i\n", mSceneGraph.getNodes().size());
 
 	/*for (int i = 0; i < mSceneGraph.getNodes().size(); i++){
 		SceneNode* n = mSceneGraph.getNode(i);

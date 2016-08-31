@@ -6,6 +6,7 @@
 #include "util\ResourceIdentifier.hpp"
 #include "Player.hpp"
 #include "states\StateStack.hpp"
+#include "sound\MusicPlayer.hpp"
 
 
 class Application{
@@ -35,6 +36,8 @@ private:
 	sf::Text mStatisticsText;
 	sf::Time mStatisticsUpdateTime;
 	std::size_t mStatisticsNumFrames;
+
+	MusicPlayer mMusic;
 	
 };
 

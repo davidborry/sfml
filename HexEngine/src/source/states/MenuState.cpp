@@ -39,6 +39,7 @@ mGUIContainer(context.window)
 	mGUIContainer.pack(settingsButton);
 	mGUIContainer.pack(exitButton);
 	
+	context.music->play(Resources::Musics::MenuTheme);
 }
 
 void MenuState::draw(){

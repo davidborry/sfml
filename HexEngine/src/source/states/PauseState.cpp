@@ -9,6 +9,9 @@ mPauseText(),
 mInstructionText()
 
 {
+
+	getContext().music->setPaused(true);
+
 	sf::Font& font = context.fonts->get(Resources::Fonts::Main);
 	sf::Vector2f viewSize = context.window->getView().getSize();
 
@@ -23,6 +26,10 @@ mInstructionText()
 	centerOrigin(mInstructionText);
 	mInstructionText.setPosition(0.5f*viewSize.x, 0.6f*viewSize.y);
 
+}
+
+PauseState::~PauseState(){
+	getContext().music->setPaused(false);
 }
 
 void PauseState::draw(){

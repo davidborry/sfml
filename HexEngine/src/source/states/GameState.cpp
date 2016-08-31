@@ -9,6 +9,8 @@ mPlayer(*context.player)
 {
 	mPlayer.startGame();
 	mPlayer.setMissionStatus(Player::MissionRunning);
+
+	context.music->play(Resources::Musics::MissionTheme);
 }
 
 void GameState::draw(){
