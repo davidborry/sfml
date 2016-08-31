@@ -21,6 +21,7 @@ public:
 	
 	Aircraft(Type type, const TextureHolder& textures, const FontHolder& fonts);
 	virtual void drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const;
+	void playLocalSound(CommandQueue& command, Resources::SoundEffects::ID effect);
 
 	virtual unsigned int getCategory() const;
 	float getMaxSpeed() const;
@@ -71,6 +72,7 @@ private:
 	Command mMissileCommand;
 
 	bool mIsMarkedForRemoval;
+	bool mPlayedExplosionSound;
 };
 
 #endif

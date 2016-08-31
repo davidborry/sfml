@@ -11,6 +11,7 @@ mPlayer(*context.player)
 	mPlayer.setMissionStatus(Player::MissionRunning);
 
 	context.music->play(Resources::Musics::MissionTheme);
+
 }
 
 void GameState::draw(){

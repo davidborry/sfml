@@ -29,6 +29,7 @@ gameOver(false)
 	addEnemies();
 
 	mWorldView.setCenter(mSpawnPosition);
+
 }
 
 void World::loadTextures(){
@@ -150,7 +151,7 @@ void World::update(sf::Time dt){
 	mSceneGraph.update(dt, mCommandQueue);
 	adaptPlayerPosition();
 
-
+	updateSounds();
 }
 
 CommandQueue& World::getCommandQueue(){
@@ -268,6 +269,7 @@ void World::handleCollisions(){
 
 			pickup.apply(player);
 			pickup.destroy();
+			player.playLocalSound(mCommandQueue, Resources::SoundEffects::CollectPickup);
 		}
 
 		else if (matchesCategories(pair, Category::EnemyProjectile, Category::PlayerAircraft)){
@@ -333,4 +335,9 @@ bool World::hasActivePlayer() const {
 
 bool World::hasPlayerReachedEnd() const{
 	return !mWorldBounds.contains(mPlayerAircraft->getPosition());
+}
+
+void World::updateSounds(){
+	mSounds.setListenerPosition(mPlayerAircraft->getWorldPosition());
+	mSounds.removeStoppedSounds();
 }

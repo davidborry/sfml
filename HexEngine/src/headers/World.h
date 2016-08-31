@@ -32,12 +32,14 @@ public:
 	explicit World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds);
 	void update(sf::Time dt);
 	void draw();
+	void updateSounds();
 
 	CommandQueue& getCommandQueue();
 	bool gameStatus() const;
 
 	bool hasActivePlayer() const;
 	bool hasPlayerReachedEnd() const;
+
 
 private:
 	void loadTextures();

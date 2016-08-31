@@ -17,6 +17,7 @@ mSounds()
 	mSoundBuffers.load(Resources::SoundEffects::Explosion2, "Resources/sounds/Explosion2.wav");
 	mSoundBuffers.load(Resources::SoundEffects::LaunchMissile, "Resources/sounds/LaunchMissile.wav");
 	mSoundBuffers.load(Resources::SoundEffects::Button, "Resources/sounds/Button.wav");
+	mSoundBuffers.load(Resources::SoundEffects::CollectPickup, "Resources/sounds/CollectPickup.wav");
 
 }
 

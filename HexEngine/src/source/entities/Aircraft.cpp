@@ -1,6 +1,7 @@
 #include "../../headers/entities/Aircraft.hpp"
 #include "../../headers/util/Utility.hpp"
 #include "../../headers/commands/CommandQueue.hpp"
+#include "../../headers/scene/SoundNode.hpp"
 
 Resources::Textures::ID toTextureID(Aircraft::Type id){
 	switch (id){
@@ -34,7 +35,8 @@ mMissileCommand(),
 mSpreadLevel(1),
 mMissiles(3),
 mExplosion(textures.get(Resources::Textures::Explosion)),
-mShowExplosion(true)
+mShowExplosion(true),
+mPlayedExplosionSound(false)
 
 
 {
@@ -84,6 +86,14 @@ void Aircraft::updateCurrent(sf::Time dt, CommandQueue& commands){
 
 	if (isDestroyed()){
 		mExplosion.update(dt);
+
+		if (!mPlayedExplosionSound){
+			Resources::SoundEffects::ID sound = (randomInt(2) == 0) ? Resources::SoundEffects::Explosion1 : Resources::SoundEffects::Explosion2;
+			playLocalSound(commands, sound);
+
+			mPlayedExplosionSound = true;
+		}
+
 		return;
 	}
 
@@ -156,6 +166,8 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands){
 		fire();
 
 	if (mIsFiring && mFireCountdown <= sf::Time::Zero){
+
+		playLocalSound(commands, isAllied() ? Resources::SoundEffects::AlliedGunfire : Resources::SoundEffects::EnemyGunfire);
 		commands.push(mFireCommand);
 		mFireCountdown += sf::seconds(1.f / (mFireRateLevel + 1));
 		mIsFiring = false;
@@ -167,6 +179,7 @@ void Aircraft::checkProjectileLaunch(sf::Time dt, CommandQueue& commands){
 
 	if (mIsLaunchingMissile){
 		//printf("test\n");
+		playLocalSound(commands, Resources::SoundEffects::LaunchMissile);
 		commands.push(mMissileCommand);
 		mIsLaunchingMissile = false;
 		mMissiles--;
@@ -263,4 +276,15 @@ void Aircraft::updateRollAnmation(){
 
 		mSprite.setTextureRect(textureRect);
 	}
+}
+
+void Aircraft::playLocalSound(CommandQueue& commands, Resources::SoundEffects::ID effect){
+	Command command;
+	command.action = derivedAction<SoundNode>([effect,this](SoundNode& sound, sf::Time){
+		sound.playSound(effect, getWorldPosition());
+	});
+
+	command.category = Category::SoundEffect;
+
+	commands.push(command);
 }
