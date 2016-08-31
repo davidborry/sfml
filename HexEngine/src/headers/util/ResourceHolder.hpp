@@ -2,6 +2,7 @@
 #define RESOURCEHOLDER_HPP
 
 #include "SFML\Graphics.hpp"
+#include "SFML\Audio.hpp"
 #include <memory>
 #include <assert.h>
 

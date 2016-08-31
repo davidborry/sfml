@@ -12,6 +12,8 @@
 #include "entities\Pickup.hpp"
 #include "scene\ParticleNode.hpp"
 #include "graphics\BloomEffect.hpp"
+#include "sound\SoundPlayer.hpp"
+#include "scene\SoundNode.hpp"
 #include <array>
 
 
@@ -27,7 +29,7 @@ public:
 	};
 
 public:
-	explicit World(sf::RenderTarget& outputTarget, FontHolder& fonts);
+	explicit World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds);
 	void update(sf::Time dt);
 	void draw();
 
@@ -73,6 +75,7 @@ private:
 	sf::RenderTarget& mTarget;
 	sf::RenderTexture mSceneTexture;
 	BloomEffect mBloomEffect;
+	SoundPlayer& mSounds;
 
 	sf::FloatRect mWorldBounds;
 	sf::Vector2f mSpawnPosition;

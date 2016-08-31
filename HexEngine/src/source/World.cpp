@@ -8,9 +8,10 @@ y(y)
 
 }
 
-World::World(sf::RenderTarget& outputTarget, FontHolder& fonts) : 
+World::World(sf::RenderTarget& outputTarget, FontHolder& fonts, SoundPlayer& sounds) : 
 mTarget(outputTarget),
 mFonts(fonts),
+mSounds(sounds),
 mWorldView(outputTarget.getDefaultView()),
 mWorldBounds(0.f, 0.f, mWorldView.getSize().x, 5000.f),
 mSpawnPosition(mWorldView.getSize().x/2.f, mWorldBounds.height - mWorldView.getSize().y /2.f),
@@ -85,6 +86,8 @@ void World::buildScene(){
 	std::unique_ptr<ParticleNode> propellantNode(new ParticleNode(Particle::Propellant, mTextures));
 	mSceneLayers[LowerAir]->attachChild(std::move(propellantNode));
 
+	std::unique_ptr<SoundNode> soundNode(new SoundNode(mSounds));
+	mSceneGraph.attachChild(std::move(soundNode));
 	/**std::unique_ptr<Aircraft> leftEscort(new Aircraft(Aircraft::RAPTOR, mTextures, mFonts));
 	leftEscort->setPosition(-80.f, 50.f);
 	mPlayerAircraft->attachChild(std::move(leftEscort));

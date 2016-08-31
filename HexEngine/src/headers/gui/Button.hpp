@@ -5,6 +5,8 @@
 #include <functional>
 #include "../util/ResourceHolder.hpp"
 #include "../util/ResourceIdentifier.hpp"
+#include "../sound/SoundPlayer.hpp"
+#include "../states/State.hpp"
 
 namespace GUI{
 	class Button : public Component{
@@ -21,7 +23,7 @@ namespace GUI{
 		};
 
 	public:
-		Button(const FontHolder& fonts, const TextureHolder& textures);
+		Button(State::Context context);
 
 		void setCallBack(Callback callback);
 		void setText(const std::string& text);
@@ -43,10 +45,13 @@ namespace GUI{
 		void changeTexture(Type button);
 
 	private:
+		State::Context mContext;
+
 		Callback mCallback;
 		sf::Sprite mSprite;
 		sf::Text mText;
 		bool mIsToggle;
+		SoundPlayer& mSound;
 
 	};
 }

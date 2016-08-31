@@ -4,7 +4,7 @@
 
 GameState::GameState(StateStack& stack, Context context, int param) :
 State(stack, context,param),
-mWorld(*context.window,*context.fonts),
+mWorld(*context.window,*context.fonts,*context.sounds),
 mPlayer(*context.player)
 {
 	mPlayer.startGame();

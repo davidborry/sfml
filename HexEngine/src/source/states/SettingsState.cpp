@@ -10,7 +10,7 @@ mGUIContainer(context.window)
 	addButtonLabel(Player::MoveDown, 250.f, "Move Down", context);
 	addButtonLabel(Player::MoveUp, 300.f, "Move Up", context);
 
-	auto backButton = std::make_shared<GUI::Button>(*context.fonts, *context.textures);
+	auto backButton = std::make_shared<GUI::Button>(context);
 	backButton->setPosition(80.f, 375.f);
 	backButton->setText("Back");
 	backButton->setCallBack([this]() {
@@ -66,7 +66,7 @@ bool SettingsState::handleEvent(const sf::Event& event){
 }
 
 void SettingsState::addButtonLabel(Player::Action action, float y, const std::string& text, Context context){
-	mBindingButtons[action] = std::make_shared<GUI::Button>(*context.fonts, *context.textures);
+	mBindingButtons[action] = std::make_shared<GUI::Button>(context);
 	mBindingButtons[action]->setPosition(80.f, y);
 	mBindingButtons[action]->setText(text);
 	mBindingButtons[action]->setToggle(true);

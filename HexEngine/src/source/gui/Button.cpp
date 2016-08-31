@@ -2,11 +2,13 @@
 #include "../../headers/util/Utility.hpp"
 
 namespace GUI{
-	Button::Button(const FontHolder& fonts, const TextureHolder& textures):
+	Button::Button(State::Context context):
+		mContext(context),
 		mCallback(),
-		mSprite(textures.get(Resources::Textures::Buttons)),
-		mText("", fonts.get(Resources::Fonts::Main)),
-		mIsToggle(false)
+		mSprite(context.textures->get(Resources::Textures::Buttons)),
+		mText("", context.fonts->get(Resources::Fonts::Main)),
+		mIsToggle(false),
+		mSound(*context.sounds)
 	{
 		changeTexture(Normal);
 		sf::FloatRect bounds = mSprite.getLocalBounds();
@@ -39,7 +41,6 @@ namespace GUI{
 	void Button::activate(){
 		Component::activate();
 
-
 		// If we are toggle then we should show that the button is pressed and thus "toggled".
 		if (mIsToggle)
 			changeTexture(Pressed);
@@ -50,6 +51,9 @@ namespace GUI{
 		// If we are not a toggle then deactivate the button since we are just momentarily activated.
 		if (!mIsToggle)
 			deactivate();
+
+		mSound.play(Resources::SoundEffects::Button);
+
 	}
 
 	void Button::deactivate(){

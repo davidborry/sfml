@@ -7,7 +7,7 @@
 #include "Player.hpp"
 #include "states\StateStack.hpp"
 #include "sound\MusicPlayer.hpp"
-
+#include "../headers/sound/SoundPlayer.hpp"
 
 class Application{
 
@@ -38,6 +38,7 @@ private:
 	std::size_t mStatisticsNumFrames;
 
 	MusicPlayer mMusic;
+	SoundPlayer mSounds;
 	
 };
 

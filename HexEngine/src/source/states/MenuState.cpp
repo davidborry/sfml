@@ -12,7 +12,7 @@ mGUIContainer(context.window)
 
 	mBackgroundSprite.setTexture(texture);
 
-	auto playButton = std::make_shared<GUI::Button>(*context.fonts, *context.textures);
+	auto playButton = std::make_shared<GUI::Button>(context);
 	playButton->setPosition(100, 250);
 	playButton->setText("Play");
 	playButton->setCallBack([this]() {
@@ -20,14 +20,14 @@ mGUIContainer(context.window)
 		requestStackPush(States::Loading);
 	});
 
-	auto settingsButton = std::make_shared<GUI::Button>(*context.fonts, *context.textures);
+	auto settingsButton = std::make_shared<GUI::Button>(context);
 	settingsButton->setPosition(100, 300);
 	settingsButton->setText("Settings");
 	settingsButton->setCallBack([this]() {
 		requestStackPush(States::Settings);
 	});
 
-	auto exitButton = std::make_shared<GUI::Button>(*context.fonts, *context.textures);
+	auto exitButton = std::make_shared<GUI::Button>(context);
 	exitButton->setPosition(100, 350);
 	exitButton->setText("Exit");
 	exitButton->setCallBack([this]() {
